@@ -4,7 +4,13 @@
     display: inline-block;
     cursor: default;
   }
-  .tooltip-wrapper {
+  .tooltip-wrapper{
+    animation: fadingIn 0.2s ease-in-out;
+    &.cerrando{
+      animation: fadingOut 0.2s ease-in-out;
+    }
+  }
+  .tooltip-content {
     position: absolute;
     border: 1px solid black;
     padding: 8px 12px;
@@ -23,9 +29,19 @@
     box-sizing: border-box;
     width: 7.78px;
     height: 7.78px;
+    
     // bottom: -11px;
     // margin: auto;
     // left: 0;
     // right: 0;
   }
+}
+
+@keyframes fadingIn {
+  0%{opacity: 0;}
+  100%{opacity: 1;}
+}
+@keyframes fadingOut {
+  0%{opacity: 1;}
+  100%{opacity: 0;}
 }

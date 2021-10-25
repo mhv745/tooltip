@@ -12,7 +12,7 @@ function App() {
         <div className="caja">Sin tooltip</div>
 
 
-        <Tooltip content="Texto del tooltip" position="left">
+        <Tooltip content="Texto del tooltip" position="left" offset={10}>
           <div className="caja">Left</div>
         </Tooltip>
 
@@ -20,7 +20,7 @@ function App() {
           <div className="caja">Right</div>
         </Tooltip>
 
-        <Tooltip content="Texto del tooOO OOOOOOO Oooooo ooltip" position="top">
+        <Tooltip content="TextodeltooOOOOOOOOOOoooooooltip" position="top">
           <div className="caja">Top</div>
         </Tooltip>
       </div>

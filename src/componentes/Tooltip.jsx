@@ -4,7 +4,7 @@ import './Tooltip.scss';
  * NO onClose = metodo a llamar cuando se cierra el tooltip
  * content = el contenido del tooltip
  * position = "bottom", "top", "right", "left"
- * offsetArrow = Separación entre la flechita y el children
+ * offset = Separación entre la flechita y el children
  * boundary
  */
 
@@ -13,11 +13,15 @@ import './Tooltip.scss';
  */
 const ARROW_SIDE = 8;
 const ARROW_HYPOTENUSE = 11.31;
-
 const MIN_DISTANCE_BOUNDARY = 10
 
-function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
-  const [show, setShow] = useState(true);
+//TODO Borrar
+const ESTADO_POR_DEFECTO = false
+
+
+function Tooltip({ content, position = 'bottom', offset = 0, children }) {
+  const [show, setShow] = useState(ESTADO_POR_DEFECTO);
+  const [closing, setClosing] = useState(false)
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
 
@@ -31,15 +35,13 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
     }
   }, []);
 
-
-  const onElementChange = () => {
-    if(elementRef.current){
-      setElementDimensions(elementRef.current.getBoundingClientRect())
-    }
-  }
-
   useEffect(() => {
-    setElementDimensions(elementRef.current.getBoundingClientRect())
+    const onElementChange = () => {
+      if(elementRef.current){
+        setElementDimensions(elementRef.current.getBoundingClientRect())
+      }
+    }
+    onElementChange()
     window.addEventListener("resize", onElementChange)
     return () => window.addEventListener("resize", onElementChange)
   }, [elementRef])
@@ -51,93 +53,126 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
   const calcularPosiciones = () => {
     if (tooltipDimensions && elementDimensions) {
       if (position === 'bottom') {
-        const topArrow = elementDimensions.bottom + offsetArrow + ARROW_SIDE / 4;
-        const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
-        setArrowStyles({
-          top: `${topArrow}px`,
-          left: `${leftArrow}px`,
-        });
-        let leftTooltip = leftArrow - tooltipDimensions.width / 2;
-        leftTooltip = leftTooltip <= MIN_DISTANCE_BOUNDARY ? MIN_DISTANCE_BOUNDARY : leftTooltip
-        setTooltipStyles({
-          top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
-          left: `${leftTooltip}px`,
-        });
+        updateTooltipButton()
       } else if (position === 'top') {
-        const topArrow = elementDimensions.top - offsetArrow - ARROW_SIDE - ARROW_SIDE / 4;
-        const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
-        setArrowStyles({
-          transform: 'rotate(225deg)',
-          top: `${topArrow}px`,
-          left: `${leftArrow}px`,
-        });
-        let leftTooltip = leftArrow - tooltipDimensions.width / 2;
-        const boundaryRight = window.innerWidth - MIN_DISTANCE_BOUNDARY;
-        const isInBoundary = tooltipDimensions.right > boundaryRight;
-        leftTooltip = isInBoundary ? boundaryRight - tooltipDimensions.width + MIN_DISTANCE_BOUNDARY : leftTooltip
-        setTooltipStyles({
-          top: `${elementDimensions.top - offsetArrow - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
-          left: `${leftTooltip}px`,
-          marginRight: isInBoundary ? `${MIN_DISTANCE_BOUNDARY}px` : 0
-        });
+        updateTooltipTop()
       } else if (position === 'left') {
-        const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
-        const leftArrow = elementDimensions.left - offsetArrow - ARROW_HYPOTENUSE + ARROW_SIDE / 4;
-        setArrowStyles({
-          transform: 'rotate(135deg)',
-          top: `${topArrow}px`,
-          left: `${leftArrow}px`,
-        });
-        setTooltipStyles({
-          top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
-          left: `${leftArrow - tooltipDimensions.width + ARROW_SIDE / 2}px`,
-        });
+        updateTooltipLeft()
       } else if (position === 'right') {
-        const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
-        const leftArrow = elementDimensions.right + offsetArrow + ARROW_SIDE / 4;
-        setArrowStyles({
-          transform: 'rotate(315deg)',
-          top: `${topArrow}px`,
-          left: `${leftArrow}px`,
-        });
-        setTooltipStyles({
-          top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
-          left: `${leftArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
-        });
+        updateTooltipRight()
       }
     }
   };
+
+  const updateTooltipButton = () => {
+    const topArrow = elementDimensions.bottom + offset + ARROW_SIDE / 4;
+    const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
+    setArrowStyles({
+      top: `${topArrow}px`,
+      left: `${leftArrow}px`,
+    });
+    let leftTooltip = leftArrow - tooltipDimensions.width / 2;
+    const isInBoundary = leftTooltip <= MIN_DISTANCE_BOUNDARY // leftTooltip <= MIN_DISTANCE_BOUNDARY ? MIN_DISTANCE_BOUNDARY : leftTooltip
+    setTooltipStyles({
+      top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
+      left: `${isInBoundary ? 0 : leftTooltip}px`,
+      transform: `translateX(${isInBoundary ? MIN_DISTANCE_BOUNDARY :  0}px)`
+    });
+  }
+
+  const updateTooltipTop = () => {
+    const topArrow = elementDimensions.top - offset - ARROW_SIDE - ARROW_SIDE / 4;
+    const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
+    setArrowStyles({
+      transform: 'rotate(225deg)',
+      top: `${topArrow}px`,
+      left: `${leftArrow}px`,
+    });
+    let leftTooltip = leftArrow - tooltipDimensions.width / 2;
+    const boundaryRight = window.innerWidth - MIN_DISTANCE_BOUNDARY;
+    const isInBoundary = tooltipDimensions.right >= boundaryRight;
+    setTooltipStyles({
+      top: `${elementDimensions.top - offset - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
+      left: `${isInBoundary ? window.innerWidth - tooltipDimensions.width :  leftTooltip}px`,
+      transform: `translateX(${isInBoundary ? -MIN_DISTANCE_BOUNDARY : 0}px)`
+    });
+  }
+
+  const updateTooltipLeft = () => {
+    const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
+    const leftArrow = elementDimensions.left - offset - ARROW_HYPOTENUSE + ARROW_SIDE / 4;
+    setArrowStyles({
+      transform: 'rotate(135deg)',
+      top: `${topArrow}px`,
+      left: `${leftArrow}px`,
+    });
+    setTooltipStyles({
+      top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
+      left: `${leftArrow - tooltipDimensions.width + ARROW_SIDE / 2}px`,
+    });
+  }
+
+  const updateTooltipRight = () => {
+    const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
+    const leftArrow = elementDimensions.right + offset + ARROW_SIDE / 4;
+    setArrowStyles({
+      transform: 'rotate(315deg)',
+      top: `${topArrow}px`,
+      left: `${leftArrow}px`,
+    });
+    setTooltipStyles({
+      top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
+      left: `${leftArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
+    });
+  }
+
+  const mouseEnter = () => {
+    console.log("Entrando...")
+    setShow(true)
+    setClosing(false)
+  }
+
+  const mouseLeave = () => {
+    console.log("Cerrando...")
+    setClosing(true)
+    setTimeout(() => {
+      setShow(false)
+    }, 140);
+  }
 
   return (
     <div className="tooltip">
       <div
         className="tooltip-element"
         role="tooltip"
-        onMouseEnter={() => {
-          setShow(true);
-        }}
-        onMouseLeave={() => {
-          setShow(true);
-        }}
-        onFocus={() => setShow(true)}
-        onBlur={() => setShow(false)}
+        onMouseEnter={mouseEnter}
+        onMouseLeave={mouseLeave}
+        onFocus={mouseEnter}
+        onBlur={mouseLeave}
         ref={elementRef}
       >
         {children}
       </div>
       {show && (
-        <>
-          <div className={`tooltip-wrapper tooltip-${position}`} style={tooltipStyles} ref={tooltipRef}>
+        <div className={`tooltip-wrapper ${closing ? "cerrando" : ""}`}>
+          <div className={`tooltip-content tooltip-${position}`} style={tooltipStyles} ref={tooltipRef}>
             {content}
           </div>
           <span className="arrow" style={arrowStyles} />
-        </>
+        </div>
       )}
     </div>
   );
 }
 
 export default Tooltip;
+
+
+// const useTooltipHook = () => {
+
+//   const getArrowStyles
+
+// }
 
 // const App = () => (
 //   <div className="">
