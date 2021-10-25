@@ -5,21 +5,23 @@ import Tooltip from './componentes/Tooltip';
 function App() {
   return (
     <div className="App">
-      <div>
-        <Tooltip content="Texto del tooltip">
-          <div style={{ width: '80px', height: '40px', background: 'green' }}>Bottom</div>
+      <div className="contenedor">
+        <Tooltip content="Texto del tooltip muuuuuucho más largo">
+          <div className="caja" >Bottom</div>
         </Tooltip>
+        <div className="caja">Sin tooltip</div>
 
-        <Tooltip content="Texto del tooltip" position="top">
-          <div style={{ width: '40px', height: '40px', background: 'green' }}>Top</div>
-        </Tooltip>
 
         <Tooltip content="Texto del tooltip" position="left">
-          <div style={{ width: '40px', height: '40px', background: 'green' }}>Left</div>
+          <div className="caja">Left</div>
         </Tooltip>
 
         <Tooltip content="Texto del tooltip" position="right">
-          <div style={{ width: '40px', height: '40px', background: 'green' }}>Right</div>
+          <div className="caja">Right</div>
+        </Tooltip>
+
+        <Tooltip content="Texto del tooOO OOOOOOO Oooooo ooltip" position="top">
+          <div className="caja">Top</div>
         </Tooltip>
       </div>
     </div>

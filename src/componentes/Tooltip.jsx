@@ -14,24 +14,40 @@ import './Tooltip.scss';
 const ARROW_SIDE = 8;
 const ARROW_HYPOTENUSE = 11.31;
 
+const MIN_DISTANCE_BOUNDARY = 10
+
 function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
 
   const [elementDimensions, setElementDimensions] = useState();
   const [tooltipDimensions, setTooltipDimensions] = useState();
 
+  const elementRef = useRef()
   const tooltipRef = useCallback((domNode) => {
     if (domNode) {
       setTooltipDimensions(domNode.getBoundingClientRect());
     }
   }, []);
-  const elementRef = useCallback((domNode) => {
-    if (domNode) {
-      setElementDimensions(domNode.getBoundingClientRect());
+
+
+  const onElementChange = () => {
+    if(elementRef.current){
+      setElementDimensions(elementRef.current.getBoundingClientRect())
     }
-  }, []);
+  }
+
+  useEffect(() => {
+    setElementDimensions(elementRef.current.getBoundingClientRect())
+    window.addEventListener("resize", onElementChange)
+    return () => window.addEventListener("resize", onElementChange)
+  }, [elementRef])
+
+  useEffect(() => {
+    calcularPosiciones();
+  }, [position, elementDimensions, tooltipDimensions]);
+
   const calcularPosiciones = () => {
     if (tooltipDimensions && elementDimensions) {
       if (position === 'bottom') {
@@ -41,9 +57,11 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
           top: `${topArrow}px`,
           left: `${leftArrow}px`,
         });
+        let leftTooltip = leftArrow - tooltipDimensions.width / 2;
+        leftTooltip = leftTooltip <= MIN_DISTANCE_BOUNDARY ? MIN_DISTANCE_BOUNDARY : leftTooltip
         setTooltipStyles({
           top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
-          left: `${leftArrow - tooltipDimensions.width / 2}px`,
+          left: `${leftTooltip}px`,
         });
       } else if (position === 'top') {
         const topArrow = elementDimensions.top - offsetArrow - ARROW_SIDE - ARROW_SIDE / 4;
@@ -53,9 +71,14 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
           top: `${topArrow}px`,
           left: `${leftArrow}px`,
         });
+        let leftTooltip = leftArrow - tooltipDimensions.width / 2;
+        const boundaryRight = window.innerWidth - MIN_DISTANCE_BOUNDARY;
+        const isInBoundary = tooltipDimensions.right > boundaryRight;
+        leftTooltip = isInBoundary ? boundaryRight - tooltipDimensions.width + MIN_DISTANCE_BOUNDARY : leftTooltip
         setTooltipStyles({
           top: `${elementDimensions.top - offsetArrow - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
-          left: `${elementDimensions.left + elementDimensions.width / 2 - tooltipDimensions.width / 2}px`,
+          left: `${leftTooltip}px`,
+          marginRight: isInBoundary ? `${MIN_DISTANCE_BOUNDARY}px` : 0
         });
       } else if (position === 'left') {
         const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
@@ -84,11 +107,6 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
       }
     }
   };
-  useEffect(() => {
-    calcularPosiciones();
-    /* window.addEventListener('resize', calcularPosiciones, true);
-    return () => window.removeEventListener('resize', calcularPosiciones, true); */
-  }, [position, elementDimensions, tooltipDimensions]);
 
   return (
     <div className="tooltip">
@@ -99,10 +117,10 @@ function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
           setShow(true);
         }}
         onMouseLeave={() => {
-          setShow(false);
+          setShow(true);
         }}
         onFocus={() => setShow(true)}
-        onBlur={() => setShow(true)}
+        onBlur={() => setShow(false)}
         ref={elementRef}
       >
         {children}

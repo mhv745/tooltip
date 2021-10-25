@@ -42,3 +42,18 @@ html, body, #root, .App{
   height: 100%;
 
 }
+
+.contenedor{
+  display: grid;
+  gap: 1rem;
+  grid-auto-flow: column;
+  padding: 5rem 1rem;
+
+}
+
+.caja{
+  background: green;
+  display: inline-block;
+  padding: 1rem;
+  color: white;
+}

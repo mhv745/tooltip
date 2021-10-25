@@ -9,10 +9,9 @@
     border: 1px solid black;
     padding: 8px 12px;
     background: white;
-    min-width: 150px;
   }
   .arrow {
-    position: fixed;
+    position: absolute;
     display: block;
     background: white;
     transform: rotate(45deg);
