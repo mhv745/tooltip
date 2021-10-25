@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import "./Tooltip.scss"
+import './Tooltip.scss';
 /**
  * NO onClose = metodo a llamar cuando se cierra el tooltip
  * content = el contenido del tooltip
@@ -11,82 +11,84 @@ import "./Tooltip.scss"
 /**
  * Distance between Element and Tooltip. (Half of the hipotenuse of the arrow)
  */
-const ARROW_SIDE = 7.78;
-const ARROW_HYPOTENUSE = 11;
+const ARROW_SIDE = 8;
+const ARROW_HYPOTENUSE = 11.31;
 
-function Tooltip({
-  content, position = 'bottom', offsetArrow = 0, children,
-}) {
-  const [show, setShow] = useState(true);
-  const [tooltipStyles, setTooltipStyles] = useState({})
-  const [arrowStyles, setArrowStyles] = useState({})
-  
-  const [elementDimensions, setElementDimensions] = useState()
-  const [tooltipDimensions, setTooltipDimensions] = useState()
+function Tooltip({ content, position = 'bottom', offsetArrow = 0, children }) {
+  const [show, setShow] = useState(false);
+  const [tooltipStyles, setTooltipStyles] = useState({});
+  const [arrowStyles, setArrowStyles] = useState({});
 
-  const tooltipRef = useCallback(domNode => {
+  const [elementDimensions, setElementDimensions] = useState();
+  const [tooltipDimensions, setTooltipDimensions] = useState();
+
+  const tooltipRef = useCallback((domNode) => {
     if (domNode) {
-        setTooltipDimensions(domNode.getBoundingClientRect());
+      setTooltipDimensions(domNode.getBoundingClientRect());
     }
   }, []);
-  const elementRef = useCallback(domNode => {
+  const elementRef = useCallback((domNode) => {
     if (domNode) {
-        setElementDimensions(domNode.getBoundingClientRect());
+      setElementDimensions(domNode.getBoundingClientRect());
     }
   }, []);
-
-  useEffect(() => {
-      if( tooltipDimensions && elementDimensions){
-        if(position === "bottom"){
-          const topArrow = elementDimensions.bottom + offsetArrow + ARROW_SIDE / 4;
-          const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
-          setArrowStyles({
-            top: `${ topArrow}px`,
-            left: `${leftArrow}px`
-          });
-          setTooltipStyles({
-            top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
-            left: `${leftArrow - tooltipDimensions.width / 2}px`,
-          })
-        }else if(position === "top"){
-          const topArrow = elementDimensions.top - offsetArrow - ARROW_SIDE - ARROW_SIDE / 4;
-          const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
-          setArrowStyles({
-            transform: "rotate(225deg)",
-            top: `${ topArrow }px`,
-            left: `${ leftArrow }px`
-          })
-          setTooltipStyles({
-            top: `${elementDimensions.top - offsetArrow - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
-            left: `${elementDimensions.left + elementDimensions.width / 2 - tooltipDimensions.width / 2}px`,
-          })
-        }else if(position === "left"){
-          setArrowStyles({
-            transform: "rotate(135deg)",
-            top: `${elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2}px`,
-            left: `${elementDimensions.left - offsetArrow - ARROW_HYPOTENUSE + ARROW_SIDE / 4}px`
-          })
-          setTooltipStyles({
-            top: `${0}px`,
-            left: `${0}px`,
-          })
-
-        }else if(position === "right"){
-          setArrowStyles({
-            transform: "rotate(315deg)",
-            top: `${elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2}px`,
-            left:`${elementDimensions.right + offsetArrow + ARROW_SIDE / 4}px`,
-          })
-          setTooltipStyles({
-            top: `${0}px`,
-            left: `${0}px`,
-          })
-
-        }
+  const calcularPosiciones = () => {
+    if (tooltipDimensions && elementDimensions) {
+      if (position === 'bottom') {
+        const topArrow = elementDimensions.bottom + offsetArrow + ARROW_SIDE / 4;
+        const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
+        setArrowStyles({
+          top: `${topArrow}px`,
+          left: `${leftArrow}px`,
+        });
+        setTooltipStyles({
+          top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
+          left: `${leftArrow - tooltipDimensions.width / 2}px`,
+        });
+      } else if (position === 'top') {
+        const topArrow = elementDimensions.top - offsetArrow - ARROW_SIDE - ARROW_SIDE / 4;
+        const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
+        setArrowStyles({
+          transform: 'rotate(225deg)',
+          top: `${topArrow}px`,
+          left: `${leftArrow}px`,
+        });
+        setTooltipStyles({
+          top: `${elementDimensions.top - offsetArrow - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
+          left: `${elementDimensions.left + elementDimensions.width / 2 - tooltipDimensions.width / 2}px`,
+        });
+      } else if (position === 'left') {
+        const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
+        const leftArrow = elementDimensions.left - offsetArrow - ARROW_HYPOTENUSE + ARROW_SIDE / 4;
+        setArrowStyles({
+          transform: 'rotate(135deg)',
+          top: `${topArrow}px`,
+          left: `${leftArrow}px`,
+        });
+        setTooltipStyles({
+          top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
+          left: `${leftArrow - tooltipDimensions.width + ARROW_SIDE / 2}px`,
+        });
+      } else if (position === 'right') {
+        const topArrow = elementDimensions.top + elementDimensions.height / 2 - ARROW_SIDE / 2;
+        const leftArrow = elementDimensions.right + offsetArrow + ARROW_SIDE / 4;
+        setArrowStyles({
+          transform: 'rotate(315deg)',
+          top: `${topArrow}px`,
+          left: `${leftArrow}px`,
+        });
+        setTooltipStyles({
+          top: `${topArrow - tooltipDimensions.height / 2 + ARROW_SIDE / 2}px`,
+          left: `${leftArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
+        });
       }
-      
-  }, [position, tooltipDimensions, elementDimensions])
-
+    }
+  };
+  useEffect(() => {
+    calcularPosiciones();
+    /* window.addEventListener('resize', calcularPosiciones, true);
+    return () => window.removeEventListener('resize', calcularPosiciones, true); */
+  }, [position, elementDimensions, tooltipDimensions]);
 
   return (
     <div className="tooltip">
@@ -94,10 +96,10 @@ function Tooltip({
         className="tooltip-element"
         role="tooltip"
         onMouseEnter={() => {
-            setShow(true)
+          setShow(true);
         }}
         onMouseLeave={() => {
-            setShow(true)
+          setShow(false);
         }}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(true)}
@@ -106,18 +108,13 @@ function Tooltip({
         {children}
       </div>
       {show && (
-          <>
-            <div
-              className={`tooltip-wrapper tooltip-${position}`}
-              style={tooltipStyles}
-              ref={tooltipRef}
-            >
-                {content}
-            </div>
-            <span className="arrow" style={arrowStyles} />
+        <>
+          <div className={`tooltip-wrapper tooltip-${position}`} style={tooltipStyles} ref={tooltipRef}>
+            {content}
+          </div>
+          <span className="arrow" style={arrowStyles} />
         </>
       )}
-
     </div>
   );
 }
