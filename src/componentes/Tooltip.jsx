@@ -5,7 +5,7 @@ import "./Tooltip.scss"
  * content = el contenido del tooltip
  * position = "bottom", "top", "right", "left"
  * offsetArrow = Separación entre la flechita y el children
- *
+ * boundary
  */
 
 /**
@@ -57,8 +57,8 @@ function Tooltip({
             left: `${ leftArrow }px`
           })
           setTooltipStyles({
-            top: `${0}px`,
-            left: `${0}px`,
+            top: `${elementDimensions.top - offsetArrow - tooltipDimensions.height - ARROW_HYPOTENUSE / 2}px`,
+            left: `${elementDimensions.left + elementDimensions.width / 2 - tooltipDimensions.width / 2}px`,
           })
         }else if(position === "left"){
           setArrowStyles({

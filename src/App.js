@@ -12,7 +12,7 @@ function App() {
         </Tooltip>
 
 
-        <Tooltip content="Texto del tooltip" position="top" offsetArrow={10}>
+        <Tooltip content="Texto del tooltip" position="top">
           <div style={{width: "40px", height: "40px", background: "green"}}>Top</div>
         </Tooltip>
 
