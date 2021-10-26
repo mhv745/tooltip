@@ -16,7 +16,7 @@ const ARROW_HYPOTENUSE = 11.31;
 const MIN_DISTANCE_BOUNDARY = 10
 
 //TODO Borrar
-const ESTADO_POR_DEFECTO = false
+const ESTADO_POR_DEFECTO = true
 
 
 function Tooltip({ content, position = 'bottom', offset = 0, children }) {
