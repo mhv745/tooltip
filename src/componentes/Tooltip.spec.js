@@ -1,17 +1,39 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, fireEvent, waitForElementToBeRemoved} from '@testing-library/react';
 import Tooltip from './Tooltip';
+import '@testing-library/jest-dom'
 
 describe('Tooltip', () => {
   it('should render the component as children of tooltip', () => {
-    render(<Tooltip content="" children={<p>Text with tooltip</p>} />);
-    expect(true).toBeTruthy();
+    const text = "Text with tooltip";
+    const {getByText} = render(<Tooltip content="" children={<p>{text}</p>} />);
+    expect(getByText(text)).toBeInTheDocument()
   });
 
-  it('should render tooltip text on hover', () => {});
-  it('should render a complex component as tooltip', () => {});
+  it('should render tooltip text on hover', async() => {
+    const text = "Tooltip text";
+    const {getByText, findByText} = render(<Tooltip content={text} children={<p>Content</p>} />);
+    fireEvent.mouseOver(getByText("Content"))
+    expect(await findByText(text)).toBeInTheDocument()
+  });
 
-  it('should render the tooltip on top of the component', () => {});
+  it('should not render tooltip text on leave hover', async() => {
+    const text = "Tooltip text";
+    const {getByText, findByText, queryByText} = render(<Tooltip content={text} children={<p>Content</p>} />);
+    fireEvent.mouseOver(getByText("Content"))
+    expect(await findByText(text)).toBeInTheDocument()
+    fireEvent.mouseLeave(getByText("Content"))
+    await waitForElementToBeRemoved(() => queryByText(text))
+  });
+  it('should render a complex component as tooltip', () => {
+    const text = "Paragraph";
+    const {getAllByText} = render(<Tooltip content="" children={<><p>{text}</p><p>{text}</p></>} />);
+    expect(getAllByText(text).length).toBe(2)
+  });
+
+  it('should render the tooltip on top of the component', () => {
+      
+  });
   it('should render the tooltip on bottom of the component', () => {});
   it('should render the tooltip on left of the component', () => {});
   it('should render the tooltip on right of the component', () => {});

@@ -127,13 +127,11 @@ function Tooltip({ content, position = 'bottom', offset = 0, children }) {
   }
 
   const mouseEnter = () => {
-    console.log("Entrando...")
     setShow(true)
     setClosing(false)
   }
 
   const mouseLeave = () => {
-    console.log("Cerrando...")
     setClosing(true)
     setTimeout(() => {
       setShow(false)
