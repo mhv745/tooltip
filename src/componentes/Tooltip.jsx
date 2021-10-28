@@ -35,6 +35,8 @@ function Tooltip({ content, position = 'bottom', offset = 0, children }) {
     }
   }, []);
 
+
+
   useEffect(() => {
     const onElementChange = () => {
       if(elementRef.current){
@@ -67,17 +69,24 @@ function Tooltip({ content, position = 'bottom', offset = 0, children }) {
   const updateTooltipButton = () => {
     const topArrow = elementDimensions.bottom + offset + ARROW_SIDE / 4;
     const leftArrow = elementDimensions.left + elementDimensions.width / 2 - ARROW_HYPOTENUSE / 2;
-    setArrowStyles({
+    const leftTooltip = leftArrow - tooltipDimensions.width / 2;
+    const isInBoundaryLeft = leftTooltip <= MIN_DISTANCE_BOUNDARY
+    const isInBoundaryRight = leftArrow + tooltipDimensions.width / 2 > window.innerWidth - MIN_DISTANCE_BOUNDARY
+    const isInBoundaryBoth = tooltipDimensions.width + MIN_DISTANCE_BOUNDARY* 2 >= window.innerWidth
+    const translateX = isInBoundaryBoth || isInBoundaryLeft ? MIN_DISTANCE_BOUNDARY : isInBoundaryRight ? -MIN_DISTANCE_BOUNDARY : 0
+    console.log(tooltipDimensions.width, isInBoundaryBoth)
+    const arrow = {
       top: `${topArrow}px`,
       left: `${leftArrow}px`,
-    });
-    let leftTooltip = leftArrow - tooltipDimensions.width / 2;
-    const isInBoundary = leftTooltip <= MIN_DISTANCE_BOUNDARY // leftTooltip <= MIN_DISTANCE_BOUNDARY ? MIN_DISTANCE_BOUNDARY : leftTooltip
-    setTooltipStyles({
+    }
+    const tooltip = {
       top: `${topArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
-      left: `${isInBoundary ? 0 : leftTooltip}px`,
-      transform: `translateX(${isInBoundary ? MIN_DISTANCE_BOUNDARY :  0}px)`
-    });
+      left: `${isInBoundaryLeft ? 0 : leftTooltip}px`,
+      transform: `translateX(${translateX}px)`,
+      //width: `${isInBoundaryBoth ? window.innerWidth - MIN_DISTANCE_BOUNDARY * 2 : tooltipDimensions.width}px`,  
+    }
+    setArrowStyles(arrow);
+    setTooltipStyles(tooltip);
   }
 
   const updateTooltipTop = () => {
@@ -134,7 +143,7 @@ function Tooltip({ content, position = 'bottom', offset = 0, children }) {
   const mouseLeave = () => {
     setClosing(true)
     setTimeout(() => {
-      setShow(false)
+      setShow(ESTADO_POR_DEFECTO)
     }, 140);
   }
 

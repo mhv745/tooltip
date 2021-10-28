@@ -22,6 +22,9 @@ function App() {
         <Tooltip content="TextodeltooOOOOOOOOOOoooooooltip" position="top">
           <div className="caja">Top</div>
         </Tooltip>
+        <Tooltip content="Texto del tooltip muuuuuucho más largo">
+          <div className="caja" >Bottom</div>
+        </Tooltip>
       </div>
     </div>
   );
