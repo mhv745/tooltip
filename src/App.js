@@ -1,16 +1,27 @@
+import { useRef } from 'react';
 import './App.css';
 import Tooltip from './componentes/Tooltip';
 
 function App() {
+  const ref = useRef();
+
+  const handleOnHover = () => {
+    ref.current.toggle()
+  }
+
   return (
     <div className="App">
       <div className="contenedor">
-        <Tooltip content="Texto del tooltip muuuuuucho más largo" children={<div className="caja" >Bottom</div>} />
+        <Tooltip content="Texto del tooltip muuuuuucho más largo" ref={ref}>
+          {<div className="caja" >Bottom</div>}
+        </Tooltip>
         <div className="caja">Sin tooltip</div>
 
 
-        <Tooltip content="Texto del tooltip" position="left" offset={10}>
-          <div className="caja">Left</div>
+        <div className="caja" onClick={handleOnHover}>Abro el otro</div>
+
+        <Tooltip content="Texto del tooltip muuuuuucho más largo" position="left">
+          {<div className="caja" >Left</div>}
         </Tooltip>
 
         <Tooltip content="Texto del tooltip" position="right">
