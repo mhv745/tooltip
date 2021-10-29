@@ -39,7 +39,7 @@ function Tooltip(tooltipProps, ref) {
     children
   } = tooltipProps;
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [closing, setClosing] = useState(false)
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
@@ -135,11 +135,11 @@ function Tooltip(tooltipProps, ref) {
         {children}
       </div>
       {show && (
-        <div className={`tooltip-wrapper ${closing ? "cerrando" : ""}`}>
-          <div className={`tooltip-content tooltip-${position}`} style={tooltipStyles} ref={tooltipRef}>
+        <div className={`tooltip-wrapper ${closing ? "cerrando" : ""} tooltip-${position}`}>
+          <div className={`tooltip-content`} style={tooltipStyles} ref={tooltipRef}>
             {content}
           </div>
-          <span className="arrow" style={arrowStyles} />
+          <span className={`arrow arrow--${position}`} style={arrowStyles} />
         </div>
       )}
     </div>
