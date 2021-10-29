@@ -5,9 +5,7 @@ function App() {
   return (
     <div className="App">
       <div className="contenedor">
-        <Tooltip content="Texto del tooltip muuuuuucho más largo">
-          <div className="caja" >Bottom</div>
-        </Tooltip>
+        <Tooltip content="Texto del tooltip muuuuuucho más largo" children={<div className="caja" >Bottom</div>} />
         <div className="caja">Sin tooltip</div>
 
 
