@@ -25,7 +25,12 @@ const useTooltipStyles = () => {
     const getBottomStyles = useCallback(({ trigger, tooltip, offset }) => {
         const topArrow = trigger.bottom + offset;
         const leftArrow = trigger.left + trigger.width / 2 - ARROW_HYPOTENUSE / 2;
+        
+        
         const leftTooltip = leftArrow - tooltip.width / 2;
+        const translateXTooltip = leftTooltip < MIN_DISTANCE_BOUNDARY ? Math.abs(leftTooltip) + MIN_DISTANCE_BOUNDARY : 0
+
+
         const isInBoundaryLeft = leftTooltip <= MIN_DISTANCE_BOUNDARY
         const isInBoundaryRight = leftArrow + tooltip.width / 2 > window.innerWidth - MIN_DISTANCE_BOUNDARY
         const isInBoundaryBoth = tooltip.width + MIN_DISTANCE_BOUNDARY* 2 >= window.innerWidth
@@ -36,8 +41,9 @@ const useTooltipStyles = () => {
         }
         const tooltipStyles = {
             top: `${topArrow + ARROW_HYPOTENUSE / 2}px`,
-            left: `${isInBoundaryLeft ? 0 : leftTooltip}px`,
-            transform: `translateX(${translateX}px)`,
+            left: `${leftTooltip}px`,
+            transform: `translateX(${translateXTooltip}px)`,
+            maxWidth: window.innerWidth - MIN_DISTANCE_BOUNDARY * 2
             //width: `${isInBoundaryBoth ? window.innerWidth - MIN_DISTANCE_BOUNDARY * 2 : tooltip.width}px`,  
         }
         return { arrowStyles, tooltipStyles}
