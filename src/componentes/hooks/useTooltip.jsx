@@ -23,18 +23,13 @@ const useTooltipStyles = () => {
      * Get the bottom tooltip styles
      */
     const getBottomStyles = useCallback(({ trigger, tooltip, offset }) => {
+
         const topArrow = trigger.bottom + offset;
         const leftArrow = trigger.left + trigger.width / 2 - ARROW_HYPOTENUSE / 2;
-        
-        
         const leftTooltip = leftArrow - tooltip.width / 2;
-        const translateXTooltip = leftTooltip < MIN_DISTANCE_BOUNDARY ? Math.abs(leftTooltip) + MIN_DISTANCE_BOUNDARY : 0
-
-
-        const isInBoundaryLeft = leftTooltip <= MIN_DISTANCE_BOUNDARY
-        const isInBoundaryRight = leftArrow + tooltip.width / 2 > window.innerWidth - MIN_DISTANCE_BOUNDARY
-        const isInBoundaryBoth = tooltip.width + MIN_DISTANCE_BOUNDARY* 2 >= window.innerWidth
-        const translateX = isInBoundaryBoth || isInBoundaryLeft ? MIN_DISTANCE_BOUNDARY : isInBoundaryRight ? -MIN_DISTANCE_BOUNDARY : 0
+        const overflowLeft = leftTooltip < MIN_DISTANCE_BOUNDARY ? Math.abs(leftTooltip) + MIN_DISTANCE_BOUNDARY : 0;
+        const overflowRight = leftTooltip + tooltip.width >= window.innerWidth - MIN_DISTANCE_BOUNDARY ? leftTooltip + tooltip.width - window.innerWidth + MIN_DISTANCE_BOUNDARY : 0
+        const translateX = overflowLeft || overflowRight * -1
         const arrowStyles = {
             top: `${topArrow}px`,
             left: `${leftArrow}px`,
@@ -42,10 +37,12 @@ const useTooltipStyles = () => {
         const tooltipStyles = {
             top: `${topArrow + ARROW_HYPOTENUSE / 2}px`,
             left: `${leftTooltip}px`,
-            transform: `translateX(${translateXTooltip}px)`,
-            maxWidth: window.innerWidth - MIN_DISTANCE_BOUNDARY * 2
+            transform: `translateX(${translateX}px)`,
+            maxWidth: `${window.innerWidth - MIN_DISTANCE_BOUNDARY * 2}px`
             //width: `${isInBoundaryBoth ? window.innerWidth - MIN_DISTANCE_BOUNDARY * 2 : tooltip.width}px`,  
         }
+
+        console.log(translateX)
         return { arrowStyles, tooltipStyles}
     }, [])
 

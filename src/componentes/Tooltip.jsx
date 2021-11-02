@@ -40,7 +40,7 @@ function Tooltip(tooltipProps, ref) {
     children
   } = tooltipProps;
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [closing, setClosing] = useState(false)
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
