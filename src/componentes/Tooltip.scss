@@ -1,63 +1,127 @@
+
+//   .tooltip-element {
+//     display: inline-block;
+//     cursor: default;
+//   }
+//   .tooltip-wrapper{
+//     position: absolute;
+//     display: inline-block;
+//     animation: fadingIn 0.2s ease-in-out;
+//     &.cerrando{
+//       animation: fadingOut 0.2s ease-in-out;
+//     }
+//   }
+//   .tooltip-content {
+//     position: absolute;
+//     border: 1px solid black;
+//     padding: 8px 12px;
+//     background: white;
+//   }
+//   .arrow {
+//     position: absolute;
+//     display: block;
+//     background: white;
+//     border: solid black;
+//     box-sizing: border-box;
+//     width: 7.78px;
+//     height: 7.78px;
+//     transform: rotate(45deg);
+//     border-bottom-width: 0px;
+//     border-right-width: 0px;
+//     border-top-width: 0px;
+//     border-left-width: 0px;
+//     transform-origin: 0% 0%;
+
+//     &--bottom {
+//       border-top-width: 1px;
+//       border-left-width: 1px;
+//     }
+
+//     &--top {
+//       border-bottom-width: 1px;
+//       border-right-width: 1px;
+//     }
+
+//     &--right {
+//       border-bottom-width: 1px;
+//       border-left-width: 1px;
+//     }
+
+//     &--left {
+//       border-right-width: 1px;
+//       border-top-width: 1px;
+//     }
+//   }
+
+// @keyframes fadingIn {
+//   0%{opacity: 0;}
+//   100%{opacity: 1;}
+// }
+// @keyframes fadingOut {
+//   0%{opacity: 1;}
+//   100%{opacity: 0;}
+// }
+
+// .tooltip {
+//   position: absolute;
+//   display: block;
+//   background: white;
+//   border: solid black;
+//   box-sizing: border-box;
+//   width: 7.78px;
+//   height: 7.78px;
+//   transform: rotate(45deg);
+//   border-bottom-width: 0px;
+//   border-right-width: 0px;
+//   border-top-width: 0px;
+//   border-left-width: 0px;
+//   transform-origin: 0% 0%;
+// }
+
+// .tooltip-bottom::after {
+//   content: "";
+//   border-top-width: 1px;
+//   border-left-width: 1px;
+// }
+
 .tooltip {
+  position: relative;
   display: inline-block;
-  .tooltip-element {
-    display: inline-block;
-    cursor: default;
-  }
-  .tooltip-wrapper{
-    animation: fadingIn 0.2s ease-in-out;
-    &.cerrando{
-      animation: fadingOut 0.2s ease-in-out;
-    }
-  }
-  .tooltip-content {
-    position: absolute;
+}
+
+.tooltip-container {
+  position: absolute;
+  border: 1px solid black;
+      position: absolute;
     border: 1px solid black;
     padding: 8px 12px;
     background: white;
-  }
-  .arrow {
-    position: absolute;
-    display: block;
-    background: white;
-    border: solid black;
-    box-sizing: border-box;
-    width: 7.78px;
-    height: 7.78px;
-    transform: rotate(45deg);
-    border-bottom-width: 0px;
-    border-right-width: 0px;
-    border-top-width: 0px;
-    border-left-width: 0px;
-    transform-origin: 0% 0%;
+}
 
-    &--bottom {
+.tooltip-bottom {
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+.tooltip-arrow {
+  position: absolute;
+  display: block;
+  background: white;
+  border: solid black;
+  box-sizing: border-box;
+  width: 7.78px;
+  height: 7.78px;
+  transform: rotate(45deg);
+  border-bottom-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  transform-origin: 0% 0%;
+
+  &.tooltip-arrow-bottom {
       border-top-width: 1px;
       border-left-width: 1px;
-    }
-
-    &--top {
-      border-bottom-width: 1px;
-      border-right-width: 1px;
-    }
-
-    &--right {
-      border-bottom-width: 1px;
-      border-left-width: 1px;
-    }
-
-    &--left {
-      border-right-width: 1px;
-      border-top-width: 1px;
-    }
   }
+
 }
 
-@keyframes fadingIn {
-  0%{opacity: 0;}
-  100%{opacity: 1;}
-}
-@keyframes fadingOut {
-  0%{opacity: 1;}
-  100%{opacity: 0;}
-}

@@ -122,29 +122,30 @@ function Tooltip(tooltipProps, ref) {
   }));
 
   return (
-    <div className="tooltip">
-      <div
-        className="tooltip-element"
-        role="tooltip"
-        onMouseEnter={handleOpen}
-        onMouseLeave={handleClose}
-        onFocus={handleOpen}
-        onBlur={handleClose}
-        ref={triggerRef}
+    <div
+      className="tooltip"
+      role="tooltip"
+      onMouseEnter={handleOpen}
+      // onMouseLeave={handleClose}
+      onFocus={handleOpen}
+      onBlur={handleClose}
+      ref={triggerRef}
       >
-        {children}
-      </div>
-      {show && (
-        <div className={`tooltip-wrapper ${closing ? "cerrando" : ""} tooltip-${position}`}>
-          <div className={`tooltip-content`} style={tooltipStyles} ref={tooltipRef}>
-            {content}
+      {children}
+      {show &&
+        (
+        <>
+          <div className="tooltip-container tooltip-bottom" absolute>
+             {content}
           </div>
-          <span className={`arrow arrow--${position}`} style={arrowStyles} />
-        </div>
+          <span className={`tooltip-arrow tooltip-arrow--${position}`} style={arrowStyles} absolute/>
+        </>
       )}
     </div>
   );
 }
+
+
 
 export default React.forwardRef(Tooltip);
 
