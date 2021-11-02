@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, useImperativeHandle } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useImperativeHandle, forwardRef } from 'react';
+import { createPortal } from 'react-dom';
 import './Tooltip.scss';
 import useTooltipStyles from './hooks/useTooltip';
 
@@ -122,31 +123,28 @@ function Tooltip(tooltipProps, ref) {
   }));
 
   return (
-    <div className="tooltip">
       <div
-        className="tooltip-element"
+        className="tooltip"
         role="tooltip"
         onMouseEnter={handleOpen}
-        onMouseLeave={handleClose}
+        // onMouseLeave={handleClose}
         onFocus={handleOpen}
         onBlur={handleClose}
         ref={triggerRef}
       >
         {children}
-      </div>
-      {show && (
+        {show && createPortal(
         <div className={`tooltip-wrapper ${closing ? "cerrando" : ""} tooltip-${position}`}>
           <div className={`tooltip-content`} style={tooltipStyles} ref={tooltipRef}>
             {content}
           </div>
           <span className={`arrow arrow--${position}`} style={arrowStyles} />
-        </div>
-      )}
-    </div>
+        </div>, document.body)}
+      </div>
   );
 }
 
-export default React.forwardRef(Tooltip);
+export default forwardRef(Tooltip);
 
 
 // const useTooltipHook = () => {

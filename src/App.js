@@ -12,9 +12,11 @@ function App() {
   return (
     <div className="App">
       <div className="contenedor">
-        <Tooltip content="Texto del tooltip muuuuuucho más largo" ref={ref}>
-          {<div className="caja" >Bottom</div>}
-        </Tooltip>
+        <div style={{position: 'relative'}}>
+          <Tooltip content="Texto del tooltip muuuuuucho más largo" ref={ref}>
+            {<div className="caja" >Bottom</div>}
+          </Tooltip>
+        </div>
         <div className="caja">Sin tooltip</div>
 
 

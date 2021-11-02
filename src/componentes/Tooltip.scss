@@ -1,8 +1,6 @@
-.tooltip {
-  display: inline-block;
-  .tooltip-element {
-    display: inline-block;
-    cursor: default;
+
+  .tooltip {
+    display: inherit;
   }
   .tooltip-wrapper{
     animation: fadingIn 0.2s ease-in-out;
@@ -15,6 +13,7 @@
     border: 1px solid black;
     padding: 8px 12px;
     background: white;
+    white-space: nowrap;
   }
   .arrow {
     position: absolute;
@@ -51,7 +50,7 @@
       border-top-width: 1px;
     }
   }
-}
+
 
 @keyframes fadingIn {
   0%{opacity: 0;}
