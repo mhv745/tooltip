@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <div className="contenedor">
         <div style={{position: 'relative'}}>
-          <Tooltip content={"Texto del tooltip muuuuuucho más largoTexto del tooltip muuuuuucho más largoTexto del tooltip muuuuuucho más largo2"} ref={ref}>
+          <Tooltip content="一夜情" ref={ref} offset={10} >
             {<div className="caja" >Bottom</div>}
           </Tooltip>
         </div>
@@ -33,7 +33,7 @@ function App() {
         <Tooltip content="TextodeltooOOOOOOOOOOoooooooltip" position="top">
           <div className="caja">Top</div>
         </Tooltip>
-        <Tooltip content="Texto del tooltip muuuuuucho más largoTexto del tooltip muuuuuucho más largoTexto del tooltip muuuuuucho más largo">
+        <Tooltip content="Ultimas unidades">
           <div className="caja" >Bottom</div>
         </Tooltip>
       </div>

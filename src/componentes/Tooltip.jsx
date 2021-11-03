@@ -4,8 +4,14 @@ import './Tooltip.scss';
 import useTooltipStyles from './hooks/useTooltip';
 
 
+
+/**
+ * Minimum distance to boundary
+ */
+ const MIN_DISTANCE_BOUNDARY = 10
+
 //TODO Borrar
-// const ESTADO_POR_DEFECTO = false
+const ESTADO_POR_DEFECTO = false
 
 /**
  * Tooltip
@@ -37,11 +43,15 @@ function Tooltip(tooltipProps, ref) {
     content,
     position = 'bottom',
     offset = 0,
+    boundaryRef,
     children
   } = tooltipProps;
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(ESTADO_POR_DEFECTO);
   const [closing, setClosing] = useState(false)
+  const [boundary, setBoundary] = useState({
+    left: MIN_DISTANCE_BOUNDARY, right: window.innerWidth - MIN_DISTANCE_BOUNDARY
+  })
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
   const [trigger, setTrigger] = useState();
@@ -65,10 +75,21 @@ function Tooltip(tooltipProps, ref) {
    * Listens the resize event in order to change the trigger element dimensions
    */
   useEffect(() => {
-    const onTriggerChange = () => {
+    const onTriggerChange = (e) => {
       setTrigger(triggerRef.current.getBoundingClientRect())
+      let left = MIN_DISTANCE_BOUNDARY
+      let right = window.innerWidth - MIN_DISTANCE_BOUNDARY
+
+      if(boundaryRef && boundaryRef.current){
+        const clientRect = boundaryRef.current.getBoundingClientRect()
+        left = clientRect.left;
+        right = clientRect.right;
+      }
+      setBoundary({left, right})
+      console.log(e?.target?.innerWidth, window.innerWidth, left, right)
     }
     onTriggerChange()
+    
 
     window.addEventListener("resize", onTriggerChange)
     return () => window.removeEventListener("resize", onTriggerChange)
@@ -83,11 +104,11 @@ function Tooltip(tooltipProps, ref) {
 
   useEffect(() => {
     if (tooltip && trigger) {
-      const { arrowStyles, tooltipStyles } = positions[position]({tooltip, trigger, offset})
+      const { arrowStyles, tooltipStyles } = positions[position]({tooltip, trigger, offset, boundary})
       setArrowStyles(arrowStyles)
       setTooltipStyles(tooltipStyles)
     }
-  }, [position, trigger, tooltip, positions, offset]);
+  }, [position, trigger, tooltip, positions, offset, boundary]);
 
   /**
    * Handles on open event
@@ -103,7 +124,7 @@ function Tooltip(tooltipProps, ref) {
   const handleClose = () => {
     setClosing(true)
     setTimeout(() => {
-      setShow(false)
+      setShow(ESTADO_POR_DEFECTO)
     }, 140);
   }
 
@@ -127,7 +148,7 @@ function Tooltip(tooltipProps, ref) {
         className="tooltip"
         role="tooltip"
         onMouseEnter={handleOpen}
-        // onMouseLeave={handleClose}
+        onMouseLeave={handleClose}
         onFocus={handleOpen}
         onBlur={handleClose}
         ref={triggerRef}

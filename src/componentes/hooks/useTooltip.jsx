@@ -22,27 +22,29 @@ const useTooltipStyles = () => {
     /**
      * Get the bottom tooltip styles
      */
-    const getBottomStyles = useCallback(({ trigger, tooltip, offset }) => {
+    const getBottomStyles = useCallback(({ trigger, tooltip, offset, boundary }) => {
 
         const topArrow = trigger.bottom + offset;
-        const leftArrow = trigger.left + trigger.width / 2 - ARROW_HYPOTENUSE / 2;
+        const leftArrow = trigger.left + trigger.width / 2 ;
         const leftTooltip = leftArrow - tooltip.width / 2;
-        const overflowLeft = leftTooltip < MIN_DISTANCE_BOUNDARY ? Math.abs(leftTooltip) + MIN_DISTANCE_BOUNDARY : 0;
-        const overflowRight = leftTooltip + tooltip.width >= window.innerWidth - MIN_DISTANCE_BOUNDARY ? leftTooltip + tooltip.width - window.innerWidth + MIN_DISTANCE_BOUNDARY : 0
-        const translateX = overflowLeft || overflowRight * -1
+        let translateX = 0;
+        if(leftTooltip < boundary.left){
+            translateX = Math.abs(leftTooltip) + boundary.left
+        }else if(leftTooltip + tooltip.width > boundary.right){
+            translateX = boundary.right - leftTooltip - tooltip.width
+        }
+        
         const arrowStyles = {
             top: `${topArrow}px`,
             left: `${leftArrow}px`,
         }
         const tooltipStyles = {
-            top: `${topArrow + ARROW_HYPOTENUSE / 2}px`,
+            top: `${Math.floor(topArrow + ARROW_HYPOTENUSE / 2)}px`,
             left: `${leftTooltip}px`,
             transform: `translateX(${translateX}px)`,
-            maxWidth: `${window.innerWidth - MIN_DISTANCE_BOUNDARY * 2}px`
-            //width: `${isInBoundaryBoth ? window.innerWidth - MIN_DISTANCE_BOUNDARY * 2 : tooltip.width}px`,  
+            maxWidth: `${boundary.right - boundary.left}px`
         }
 
-        console.log(translateX)
         return { arrowStyles, tooltipStyles}
     }, [])
 
@@ -50,20 +52,25 @@ const useTooltipStyles = () => {
     /**
      * Get the top tooltip styles
      */
-    const getTopStyles = useCallback(({ trigger, tooltip, offset }) => {
-        const topArrow = trigger.top - offset - ARROW_SIDE - ARROW_SIDE / 4;
-        const leftArrow = trigger.left + trigger.width / 2 - ARROW_HYPOTENUSE / 2;
+    const getTopStyles = useCallback(({ trigger, tooltip, offset, boundary }) => {
+        const topArrow = trigger.top - offset - ARROW_HYPOTENUSE;
+        const leftArrow = trigger.left + trigger.width / 2;
+        const leftTooltip = leftArrow - tooltip.width / 2;
+         let translateX = 0;
+        if(leftTooltip < boundary.left){
+            translateX = Math.abs(leftTooltip) + boundary.left
+        }else if(leftTooltip + tooltip.width > boundary.right){
+            translateX = boundary.right - leftTooltip - tooltip.width
+        }
         const arrowStyles = {
             top: `${topArrow}px`,
             left: `${leftArrow}px`,
         }
-        let leftTooltip = leftArrow - tooltip.width / 2;
-        const boundaryRight = window.innerWidth - MIN_DISTANCE_BOUNDARY;
-        const isInBoundary = tooltip.right >= boundaryRight;
         const tooltipStyles = {
-            top: `${trigger.top - offset - tooltip.height - ARROW_HYPOTENUSE / 2}px`,
-            left: `${isInBoundary ? window.innerWidth - tooltip.width :  leftTooltip}px`,
-            transform: `translateX(${isInBoundary ? -MIN_DISTANCE_BOUNDARY : 0}px)`
+            top: `${Math.ceil(topArrow - tooltip.height + ARROW_HYPOTENUSE / 2)}px`,
+            left: `${leftTooltip}px`,
+            transform: `translateX(${translateX}px)`,
+            maxWidth: `${boundary.right - boundary.left}px`
         }
 
         return { arrowStyles, tooltipStyles}
@@ -90,8 +97,8 @@ const useTooltipStyles = () => {
      * Get the left tooltip styles
      */
     const getLeftStyles = useCallback(({ trigger, tooltip, offset }) => {
-        const topArrow = trigger.top + trigger.height / 2 - ARROW_SIDE / 2;
-        const leftArrow = trigger.left - offset - ARROW_HYPOTENUSE + ARROW_SIDE / 4;
+        const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2;
+        const leftArrow = trigger.left - offset - ARROW_HYPOTENUSE / 2;
         const arrowStyles = {
             top: `${topArrow}px`,
             left: `${leftArrow}px`,
