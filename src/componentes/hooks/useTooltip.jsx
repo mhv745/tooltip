@@ -8,7 +8,7 @@ const ARROW_SIDE = 8;
 /**
  * Distance between Element and Tooltip. (Half of the hipotenuse of the arrow)
  */
-const ARROW_HYPOTENUSE = 11.31;
+const ARROW_HYPOTENUSE = 11.3137;
 
 /**
  * Minimum distance to boundary
@@ -80,15 +80,15 @@ const useTooltipStyles = () => {
      * Get the right tooltip styles
      */
      const getRightStyles = useCallback(({ trigger, tooltip, offset }) => {
-        const topArrow = trigger.top + trigger.height / 2 - ARROW_SIDE / 2;
-        const leftArrow = trigger.right + offset + ARROW_SIDE / 4;
+        const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2;
+        const leftArrow = trigger.right + offset + ARROW_HYPOTENUSE / 2;
         const arrowStyles = {
             top: `${topArrow}px`,
             left: `${leftArrow}px`,
           }
         const tooltipStyles = {
-            top: `${topArrow - tooltip.height / 2 + ARROW_SIDE / 2}px`,
-            left: `${leftArrow + ARROW_HYPOTENUSE / 2 - ARROW_SIDE / 4}px`,
+            top: `${topArrow - tooltip.height / 2 + ARROW_HYPOTENUSE / 2}px`,
+            left: `${leftArrow }px`,
           }
         return { arrowStyles, tooltipStyles}
     }, [])
@@ -104,8 +104,8 @@ const useTooltipStyles = () => {
             left: `${leftArrow}px`,
         }
         const tooltipStyles = {
-            top: `${topArrow - tooltip.height / 2 + ARROW_SIDE / 2}px`,
-            left: `${leftArrow - tooltip.width + ARROW_SIDE / 2}px`,
+            top: `${topArrow - tooltip.height / 2 + ARROW_HYPOTENUSE / 2}px`,
+            left: `${leftArrow - tooltip.width}px`,
         }
         return { arrowStyles, tooltipStyles}
     }, [])

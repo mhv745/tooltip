@@ -24,6 +24,7 @@ const ESTADO_POR_DEFECTO = false
  * @property {string|JSX.Element} content - Content of the tooltip
  * @property {"bottom"= | "top"= | "left"= | "right"=} position - tooltip position with respect to children
  * @property {number=} offset - tooltip offset
+ * @property {string=} id - tooltip id
  * @property {React.ElementRef=} boundary - tooltip limits
  * 
  * @typedef {Object} RefType
@@ -44,6 +45,7 @@ function Tooltip(tooltipProps, ref) {
     position = 'bottom',
     offset = 0,
     boundaryRef,
+    id,
     children
   } = tooltipProps;
 
@@ -86,14 +88,12 @@ function Tooltip(tooltipProps, ref) {
         right = clientRect.right;
       }
       setBoundary({left, right})
-      console.log(e?.target?.innerWidth, window.innerWidth, left, right)
     }
     onTriggerChange()
     
-
     window.addEventListener("resize", onTriggerChange)
     return () => window.removeEventListener("resize", onTriggerChange)
-  }, [])
+  }, [boundaryRef])
 
   const positions = useMemo(() => ({
     'bottom': getBottomStyles,
@@ -146,16 +146,17 @@ function Tooltip(tooltipProps, ref) {
   return (
       <div
         className="tooltip"
-        role="tooltip"
         onMouseEnter={handleOpen}
         onMouseLeave={handleClose}
         onFocus={handleOpen}
         onBlur={handleClose}
+        aria-labelledby={id}
         ref={triggerRef}
       >
         {children}
         {show && createPortal(
-        <div className={`tooltip-wrapper ${closing ? "cerrando" : ""} tooltip-${position}`}>
+        <div
+        id={id} role="tooltip" className={`tooltip-wrapper ${closing ? "cerrando" : ""} tooltip-${position}`}>
           <div className={`tooltip-content`} style={tooltipStyles} ref={tooltipRef}>
             {content}
           </div>
