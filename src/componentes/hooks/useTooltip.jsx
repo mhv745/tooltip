@@ -14,7 +14,7 @@ const useTooltipStyles = () => {
    */
   const getBottomStyles = useCallback(
     ({ trigger, tooltip, offset, boundary }) => {
-      const topArrow = trigger.bottom + offset;
+      const topArrow = trigger.bottom + offset + document.documentElement.scrollTop;
       const leftArrow = trigger.left + trigger.width / 2;
       const leftTooltip = leftArrow - tooltip.width / 2;
       console.log(trigger.bottom, topArrow)

@@ -42,7 +42,7 @@ function App() {
         <button type="button" id="caja" className="caja">
           Bottom sin wrapper
         </button>
-        <Tooltip content="un tooltip muy largo para comprobar bordes">
+        <Tooltip content="un tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordes">
         <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnHover}>
           Abro el otro
         </div>

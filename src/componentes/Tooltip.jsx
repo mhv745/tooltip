@@ -7,7 +7,6 @@ import {
   useImperativeHandle,
   forwardRef,
   cloneElement,
-  useLayoutEffect,
 } from "react";
 import { createPortal } from "react-dom";
 import "./Tooltip.scss";
@@ -74,6 +73,27 @@ function Tooltip(tooltipProps, ref) {
   const triggerRef = useRef();
   const tooltipRef = useRef();
 
+
+
+  /**
+   * Listens the resize event in order to change the trigger element dimensions
+   */
+   useEffect(() => {
+    const onTriggerChange = (e) => {
+      let left = MIN_DISTANCE_BOUNDARY;
+      let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
+      if (boundaryRef && boundaryRef.current) {
+        const clientRect = boundaryRef.current.getBoundingClientRect();
+        left = clientRect.left;
+        right = clientRect.right;
+      }
+      setBoundary({ left, right });
+    };
+    onTriggerChange();
+    window.addEventListener("resize", onTriggerChange);
+    return () => window.removeEventListener("resize", onTriggerChange);
+  }, [boundaryRef]);
+  
   const positions = useMemo(
     () => ({
       bottom: getBottomStyles,
@@ -99,28 +119,8 @@ function Tooltip(tooltipProps, ref) {
         setTooltipStyles(tooltipStyles);
       }
     },
-    [boundary, offset, position, positions, show],
+    [boundary, offset, position, positions, show, tooltipRef, triggerRef],
   )
-
-  /**
-   * Listens the resize event in order to change the trigger element dimensions
-   */
-  useEffect(() => {
-    const onTriggerChange = (e) => {
-      let left = MIN_DISTANCE_BOUNDARY;
-      let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
-      if (boundaryRef && boundaryRef.current) {
-        const clientRect = boundaryRef.current.getBoundingClientRect();
-        left = clientRect.left;
-        right = clientRect.right;
-      }
-      setBoundary({ left, right });
-    };
-    onTriggerChange();
-    window.addEventListener("resize", onTriggerChange);
-    return () => window.removeEventListener("resize", onTriggerChange);
-  }, [boundaryRef]);
-
 
   useEffect(() => {
     updateTooltip()
@@ -161,12 +161,17 @@ function Tooltip(tooltipProps, ref) {
 
   return (
     <>
-      {cloneElement(children, { "aria-describedby": id,  
-      onMouseEnter: handleOpen,
-      onMouseLeave:handleClose,
-      onFocus:handleOpen,
-      onBlur:handleClose,
-      ref:triggerRef})}
+      {
+        cloneElement(children, { 
+          "aria-describedby": id,  
+          onMouseEnter: handleOpen,
+          onMouseLeave:handleClose,
+          onFocus:handleOpen,
+          onBlur:handleClose,
+          ref:triggerRef,
+          key: key
+        })
+      }
       {show &&
         createPortal(
           <div

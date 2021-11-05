@@ -1,10 +1,9 @@
-.tooltip {
-  display: inherit;
-}
 .tooltip-wrapper {
   animation: fadingIn 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
   &.closing {
-    animation: fadingOut 0.2s ease-in-out;
+    opacity: 0;
+    //animation: fadingOut 0.2s ease-in-out;
   }
 }
 .tooltip-content {
@@ -13,9 +12,6 @@
   padding: 8px 12px;
   background: white;
   box-sizing: border-box;
-  // overflow: auto;
-  // text-overflow: ellipsis;
-  // white-space: nowrap;
 }
 .arrow {
   position: absolute;
@@ -61,11 +57,11 @@
     opacity: 1;
   }
 }
-@keyframes fadingOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
+// @keyframes fadingOut {
+//   0% {
+//     opacity: 1;
+//   }
+//   100% {
+//     opacity: 0;
+//   }
+// }
