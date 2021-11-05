@@ -1,12 +1,36 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import Tooltip from "./componentes/Tooltip";
 
 function App() {
   const refTooltipBottom = useRef();
   const boxRef = useRef()
+  const [pos, setPos] = useState("bottom")
+  const [open, setOpen] = useState(false)
 
-  const handleOnHover = () => {
+  const handleOnClick = () => {
+    let newPos = "bottom"
+    switch (pos) {
+      case "bottom":
+        newPos ="left"
+        break;
+      case "top":
+        newPos ="right"
+        break;
+      case "left":
+        newPos ="top"
+        break;
+      default:
+        newPos ="bottom"
+        break;
+    }
+    if(open){
+      setTimeout(() => {
+        setPos(newPos)
+        
+      }, 200);
+    }
+    setOpen(!open)
     refTooltipBottom.current.toggle();
   };
 
@@ -16,14 +40,9 @@ function App() {
         <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black"}}>
           <Tooltip
             id="toolt"
-            // content="Esto no es una miagen"
-            content={
-              // <img
-              //   alt="Alternative text"
-              //   src="https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"
-              // ></img>
-              "Últimas unidades con texto más largo largo"
-            }
+            content="Últimas unidades con texto más largo largo"
+            position={pos}
+            offset={10}
             boundaryRef={boxRef}
             ref={refTooltipBottom}
           >
@@ -43,7 +62,7 @@ function App() {
           Bottom sin wrapper
         </button>
         <Tooltip content="un tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordes">
-        <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnHover}>
+        <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnClick}>
           Abro el otro
         </div>
         </Tooltip>

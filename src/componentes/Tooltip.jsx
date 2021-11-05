@@ -92,7 +92,7 @@ function Tooltip(tooltipProps, ref) {
     onTriggerChange();
     window.addEventListener("resize", onTriggerChange);
     return () => window.removeEventListener("resize", onTriggerChange);
-  }, [boundaryRef]);
+  }, [boundaryRef, show]);
   
   const positions = useMemo(
     () => ({

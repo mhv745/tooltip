@@ -46,7 +46,7 @@ const useTooltipStyles = () => {
    * Get the top tooltip styles
    */
   const getTopStyles = useCallback(({ trigger, tooltip, offset, boundary }) => {
-    const topArrow = trigger.top - offset - ARROW_HYPOTENUSE;
+    const topArrow = trigger.top - offset - ARROW_HYPOTENUSE + document.documentElement.scrollTop;
     const leftArrow = trigger.left + trigger.width / 2;
     const leftTooltip = leftArrow - tooltip.width / 2;
     let translateX = 0;
@@ -74,7 +74,7 @@ const useTooltipStyles = () => {
    * Get the right tooltip styles
    */
   const getRightStyles = useCallback(({ trigger, tooltip, offset }) => {
-    const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2;
+    const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2 + document.documentElement.scrollTop;
     const leftArrow = trigger.right + offset + ARROW_HYPOTENUSE / 2;
     const arrowStyles = {
       top: `${topArrow}px`,
@@ -92,7 +92,7 @@ const useTooltipStyles = () => {
    * Get the left tooltip styles
    */
   const getLeftStyles = useCallback(({ trigger, tooltip, offset }) => {
-    const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2;
+    const topArrow = trigger.top + trigger.height / 2 - ARROW_HYPOTENUSE / 2 + document.documentElement.scrollTop;
     const leftArrow = trigger.left - offset - ARROW_HYPOTENUSE / 2;
     const arrowStyles = {
       top: `${topArrow}px`,
