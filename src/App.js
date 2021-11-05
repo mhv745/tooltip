@@ -17,6 +17,7 @@ function App() {
           <h1>Antes del trriger</h1>
           <Tooltip
             id="toolt"
+            // content="Esto no es una miagen"
             content={
               <img
                 alt="Alternative text"

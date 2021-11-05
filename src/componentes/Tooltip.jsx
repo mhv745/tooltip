@@ -66,7 +66,7 @@ function Tooltip(tooltipProps, ref) {
   });
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
-  const [trigger, setTrigger] = useState();
+
   const [tooltip, setTooltip] = useState();
 
   const { getBottomStyles, getTopStyles, getRightStyles, getLeftStyles } =
@@ -89,7 +89,6 @@ function Tooltip(tooltipProps, ref) {
    */
   useEffect(() => {
     const onTriggerChange = (e) => {
-      setTrigger(triggerRef.current.getBoundingClientRect());
       let left = MIN_DISTANCE_BOUNDARY;
       let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
 
@@ -117,6 +116,7 @@ function Tooltip(tooltipProps, ref) {
   );
 
   useEffect(() => {
+    const trigger = triggerRef.current.getBoundingClientRect();
     if (tooltip && trigger) {
       const { arrowStyles, tooltipStyles } = positions[position]({
         tooltip,
@@ -127,7 +127,7 @@ function Tooltip(tooltipProps, ref) {
       setArrowStyles(arrowStyles);
       setTooltipStyles(tooltipStyles);
     }
-  }, [position, trigger, tooltip, positions, offset, boundary]);
+  }, [position, tooltip, positions, offset, boundary, triggerRef]);
 
   /**
    * Handles on open event
