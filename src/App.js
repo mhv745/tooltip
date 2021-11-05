@@ -4,6 +4,7 @@ import Tooltip from "./componentes/Tooltip";
 
 function App() {
   const refTooltipBottom = useRef();
+  const boxRef = useRef()
 
   const handleOnHover = () => {
     refTooltipBottom.current.toggle();
@@ -12,41 +13,40 @@ function App() {
   return (
     <div className="App">
       <div className="contenedor">
-        <div style={{ position: "relative" }}>
-          <div>DIV DE FUERA</div>
-          <h1>Antes del trriger</h1>
+        <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black"}}>
           <Tooltip
             id="toolt"
             // content="Esto no es una miagen"
             content={
-              <img
-                alt="Alternative text"
-                src="https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"
-              ></img>
+              // <img
+              //   alt="Alternative text"
+              //   src="https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"
+              // ></img>
+              "Últimas unidades con texto más largo largo"
             }
+            boundaryRef={boxRef}
             ref={refTooltipBottom}
-            offset={10}
           >
-            <button
-              type="button"
+            <div
               aria-describedby="test"
               id="caja"
               className="caja"
-              onClick={() => {
-                refTooltipBottom.current.toggle();
-              }}
             >
               Bottom del triggerrrr
-            </button>
+            </div>
           </Tooltip>
         </div>
-        <div className="caja">Sin tooltip</div>
+        <Tooltip content="Últimas unidades">
+          <div className="caja">Sin tooltip</div>
+        </Tooltip>
         <button type="button" id="caja" className="caja">
           Bottom sin wrapper
         </button>
-        <div className="caja" onClick={handleOnHover}>
+        <Tooltip content="un tooltip muy largo para comprobar bordes">
+        <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnHover}>
           Abro el otro
         </div>
+        </Tooltip>
 
         {/* <Tooltip content="Texto del tooltip muuuuuucho más largo" position="left">
           {<input type="text" />}

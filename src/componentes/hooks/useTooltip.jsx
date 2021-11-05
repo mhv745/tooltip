@@ -17,6 +17,7 @@ const useTooltipStyles = () => {
       const topArrow = trigger.bottom + offset;
       const leftArrow = trigger.left + trigger.width / 2;
       const leftTooltip = leftArrow - tooltip.width / 2;
+      console.log(trigger.bottom, topArrow)
       let translateX = 0;
       if (leftTooltip < boundary.left) {
         translateX = Math.abs(leftTooltip) + boundary.left;
@@ -33,6 +34,7 @@ const useTooltipStyles = () => {
         left: `${leftTooltip}px`,
         transform: `translateX(${translateX}px)`,
         maxWidth: `${boundary.right - boundary.left}px`,
+        width: `${tooltip.width}px`
       };
 
       return { arrowStyles, tooltipStyles };
@@ -62,6 +64,7 @@ const useTooltipStyles = () => {
       left: `${leftTooltip}px`,
       transform: `translateX(${translateX}px)`,
       maxWidth: `${boundary.right - boundary.left}px`,
+      width: `${tooltip.width}px`
     };
 
     return { arrowStyles, tooltipStyles };
@@ -80,6 +83,7 @@ const useTooltipStyles = () => {
     const tooltipStyles = {
       top: `${topArrow - tooltip.height / 2 + ARROW_HYPOTENUSE / 2}px`,
       left: `${leftArrow}px`,
+      width: `${tooltip.width}px`
     };
     return { arrowStyles, tooltipStyles };
   }, []);
@@ -97,6 +101,7 @@ const useTooltipStyles = () => {
     const tooltipStyles = {
       top: `${topArrow - tooltip.height / 2 + ARROW_HYPOTENUSE / 2}px`,
       left: `${leftArrow - tooltip.width}px`,
+      width: `${tooltip.width}px`
     };
     return { arrowStyles, tooltipStyles };
   }, []);

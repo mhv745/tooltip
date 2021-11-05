@@ -7,6 +7,7 @@ import {
   useImperativeHandle,
   forwardRef,
   cloneElement,
+  useLayoutEffect,
 } from "react";
 import { createPortal } from "react-dom";
 import "./Tooltip.scss";
@@ -18,7 +19,7 @@ import useTooltipStyles from "./hooks/useTooltip";
 const MIN_DISTANCE_BOUNDARY = 10;
 
 //TODO Borrar
-const ESTADO_POR_DEFECTO = true;
+const ESTADO_POR_DEFECTO = false;
 
 /**
  * Tooltip
@@ -67,43 +68,11 @@ function Tooltip(tooltipProps, ref) {
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
 
-  const [tooltip, setTooltip] = useState();
-
   const { getBottomStyles, getTopStyles, getRightStyles, getLeftStyles } =
     useTooltipStyles();
 
   const triggerRef = useRef();
-
-  /**
-   * Tooltip reference which sets the tooltip dimensions on init
-   */
-  const tooltipRef = useCallback((domNode) => {
-    if (domNode) {
-      console.log(domNode.getBoundingClientRect());
-      setTooltip(domNode.getBoundingClientRect());
-    }
-  }, []);
-
-  /**
-   * Listens the resize event in order to change the trigger element dimensions
-   */
-  useEffect(() => {
-    const onTriggerChange = (e) => {
-      let left = MIN_DISTANCE_BOUNDARY;
-      let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
-
-      if (boundaryRef && boundaryRef.current) {
-        const clientRect = boundaryRef.current.getBoundingClientRect();
-        left = clientRect.left;
-        right = clientRect.right;
-      }
-      setBoundary({ left, right });
-    };
-    onTriggerChange();
-
-    window.addEventListener("resize", onTriggerChange);
-    return () => window.removeEventListener("resize", onTriggerChange);
-  }, [boundaryRef]);
+  const tooltipRef = useRef();
 
   const positions = useMemo(
     () => ({
@@ -115,19 +84,47 @@ function Tooltip(tooltipProps, ref) {
     [getBottomStyles, getTopStyles, getLeftStyles, getRightStyles]
   );
 
+  const updateTooltip = useCallback(
+    () => {
+      if (show && tooltipRef.current && triggerRef.current) {
+        const tooltip = tooltipRef.current.getBoundingClientRect()
+        const trigger = triggerRef.current.getBoundingClientRect()
+        const { arrowStyles, tooltipStyles } = positions[position]({
+          tooltip,
+          trigger,
+          offset,
+          boundary,
+        });
+        setArrowStyles(arrowStyles);
+        setTooltipStyles(tooltipStyles);
+      }
+    },
+    [boundary, offset, position, positions, show],
+  )
+
+  /**
+   * Listens the resize event in order to change the trigger element dimensions
+   */
   useEffect(() => {
-    const trigger = triggerRef.current.getBoundingClientRect();
-    if (tooltip && trigger) {
-      const { arrowStyles, tooltipStyles } = positions[position]({
-        tooltip,
-        trigger,
-        offset,
-        boundary,
-      });
-      setArrowStyles(arrowStyles);
-      setTooltipStyles(tooltipStyles);
-    }
-  }, [position, tooltip, positions, offset, boundary, triggerRef]);
+    const onTriggerChange = (e) => {
+      let left = MIN_DISTANCE_BOUNDARY;
+      let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
+      if (boundaryRef && boundaryRef.current) {
+        const clientRect = boundaryRef.current.getBoundingClientRect();
+        left = clientRect.left;
+        right = clientRect.right;
+      }
+      setBoundary({ left, right });
+    };
+    onTriggerChange();
+    window.addEventListener("resize", onTriggerChange);
+    return () => window.removeEventListener("resize", onTriggerChange);
+  }, [boundaryRef]);
+
+
+  useEffect(() => {
+    updateTooltip()
+  }, [updateTooltip]);
 
   /**
    * Handles on open event
@@ -163,16 +160,13 @@ function Tooltip(tooltipProps, ref) {
   }));
 
   return (
-    <div
-      className="tooltip"
-      onMouseEnter={handleOpen}
-      onMouseLeave={handleClose}
-      onFocus={handleOpen}
-      onBlur={handleClose}
-      ref={triggerRef}
-      key={key}
-    >
-      {cloneElement(children, { "aria-describedby": id })}
+    <>
+      {cloneElement(children, { "aria-describedby": id,  
+      onMouseEnter: handleOpen,
+      onMouseLeave:handleClose,
+      onFocus:handleOpen,
+      onBlur:handleClose,
+      ref:triggerRef})}
       {show &&
         createPortal(
           <div
@@ -193,27 +187,8 @@ function Tooltip(tooltipProps, ref) {
           </div>,
           document.body
         )}
-    </div>
+    </>
   );
 }
 
 export default forwardRef(Tooltip);
-
-// const useTooltipHook = () => {
-
-//   const getArrowStyles
-
-// }
-
-// const App = () => (
-//   <div className="">
-//     <>
-
-//       {hola.map((h) => (
-//         <Tooltip content="esto es un tooltip" position="top" arrowOffset={ARROW_HEIGHT}>
-//           <p>I</p>
-//         </Tooltip>
-//       ))}
-//     </>
-//   </div>
-// );

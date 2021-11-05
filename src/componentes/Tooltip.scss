@@ -13,9 +13,9 @@
   padding: 8px 12px;
   background: white;
   box-sizing: border-box;
-  overflow: auto;
+  // overflow: auto;
   // text-overflow: ellipsis;
-  white-space: nowrap;
+  // white-space: nowrap;
 }
 .arrow {
   position: absolute;
@@ -30,7 +30,7 @@
   border-right-width: 0px;
   border-top-width: 0px;
   border-left-width: 0px;
-  transform-origin: 0% 0%;
+  transform-origin: top left;
 
   &--bottom {
     border-top-width: 1px;
