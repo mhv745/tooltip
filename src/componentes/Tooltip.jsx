@@ -1,7 +1,16 @@
-import { useState, useRef, useEffect, useCallback, useMemo, useImperativeHandle, forwardRef } from 'react';
-import { createPortal } from 'react-dom';
-import './Tooltip.scss';
-import useTooltipStyles from './hooks/useTooltip';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  useImperativeHandle,
+  forwardRef,
+  cloneElement,
+} from "react";
+import { createPortal } from "react-dom";
+import "./Tooltip.scss";
+import useTooltipStyles from "./hooks/useTooltip";
 
 /**
  * Minimum distance to boundary
@@ -9,7 +18,7 @@ import useTooltipStyles from './hooks/useTooltip';
 const MIN_DISTANCE_BOUNDARY = 10;
 
 //TODO Borrar
-const ESTADO_POR_DEFECTO = false;
+const ESTADO_POR_DEFECTO = true;
 
 /**
  * Tooltip
@@ -19,11 +28,12 @@ const ESTADO_POR_DEFECTO = false;
  * <Tooltip content="Tooltip content">...</Tooltip>
  * ```
  * @typedef {object} TooltipProps
- * @property {string|JSX.Element} content - Content of the tooltip
- * @property {"bottom"= | "top"= | "left"= | "right"=} position - tooltip position with respect to children
- * @property {number=} offset - tooltip offset
  * @property {string=} id - tooltip id
+ * @property {string|JSX.Element} content - Content of the tooltip
+ * @property {"bottom"|"top"|"left"|"right"=} position - tooltip position with respect to children. Default value: `bottom`
+ * @property {number=} offset - tooltip offset
  * @property {React.ElementRef=} boundary - tooltip limits
+ * @property {number|string=} key
  * 
  * @typedef {Object} RefType
  * @property {Object} current
@@ -38,7 +48,15 @@ const ESTADO_POR_DEFECTO = false;
  * @returns {JSX.Element} JSX.Element
  */
 function Tooltip(tooltipProps, ref) {
-  const { content, position = 'bottom', offset = 0, boundaryRef, id, children } = tooltipProps;
+  const {
+    content,
+    position = "bottom",
+    offset = 0,
+    boundaryRef,
+    id,
+    children,
+    key,
+  } = tooltipProps;
 
   const [show, setShow] = useState(ESTADO_POR_DEFECTO);
   const [closing, setClosing] = useState(false);
@@ -51,7 +69,8 @@ function Tooltip(tooltipProps, ref) {
   const [trigger, setTrigger] = useState();
   const [tooltip, setTooltip] = useState();
 
-  const { getBottomStyles, getTopStyles, getRightStyles, getLeftStyles } = useTooltipStyles();
+  const { getBottomStyles, getTopStyles, getRightStyles, getLeftStyles } =
+    useTooltipStyles();
 
   const triggerRef = useRef();
 
@@ -60,6 +79,7 @@ function Tooltip(tooltipProps, ref) {
    */
   const tooltipRef = useCallback((domNode) => {
     if (domNode) {
+      console.log(domNode.getBoundingClientRect());
       setTooltip(domNode.getBoundingClientRect());
     }
   }, []);
@@ -82,21 +102,9 @@ function Tooltip(tooltipProps, ref) {
     };
     onTriggerChange();
 
-    window.addEventListener('resize', onTriggerChange);
-    return () => window.removeEventListener('resize', onTriggerChange);
+    window.addEventListener("resize", onTriggerChange);
+    return () => window.removeEventListener("resize", onTriggerChange);
   }, [boundaryRef]);
-
-  useEffect(() => {
-    if (show) {
-      const hundleKeyUp = (event) => {
-        if (event.key === 'Escape') {
-          handleClose();
-        }
-      };
-      window.addEventListener('keyup', hundleKeyUp);
-      return () => window.removeEventListener('keyup', hundleKeyUp);
-    }
-  }, [show]);
 
   const positions = useMemo(
     () => ({
@@ -110,7 +118,12 @@ function Tooltip(tooltipProps, ref) {
 
   useEffect(() => {
     if (tooltip && trigger) {
-      const { arrowStyles, tooltipStyles } = positions[position]({ tooltip, trigger, offset, boundary });
+      const { arrowStyles, tooltipStyles } = positions[position]({
+        tooltip,
+        trigger,
+        offset,
+        boundary,
+      });
       setArrowStyles(arrowStyles);
       setTooltipStyles(tooltipStyles);
     }
@@ -156,14 +169,24 @@ function Tooltip(tooltipProps, ref) {
       onMouseLeave={handleClose}
       onFocus={handleOpen}
       onBlur={handleClose}
-      aria-labelledby={id}
       ref={triggerRef}
+      key={key}
     >
-      {children}
+      {cloneElement(children, { "aria-describedby": id })}
       {show &&
         createPortal(
-          <div id={id} role="tooltip" className={`tooltip-wrapper ${closing ? 'cerrando' : ''} tooltip-${position}`}>
-            <div className={`tooltip-content`} style={tooltipStyles} ref={tooltipRef}>
+          <div
+            className={`tooltip-wrapper ${
+              closing ? "closing" : ""
+            } tooltip-${position}`}
+            role="tooltip"
+            id={id}
+          >
+            <div
+              className={`tooltip-content`}
+              style={tooltipStyles}
+              ref={tooltipRef}
+            >
               {content}
             </div>
             <span className={`arrow arrow--${position}`} style={arrowStyles} />

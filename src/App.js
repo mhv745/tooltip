@@ -1,28 +1,48 @@
-import { useRef } from 'react';
-import './App.css';
-import Tooltip from './componentes/Tooltip';
+import { useRef } from "react";
+import "./App.css";
+import Tooltip from "./componentes/Tooltip";
 
 function App() {
-  const ref = useRef();
+  const refTooltipBottom = useRef();
 
   const handleOnHover = () => {
-    ref.current.toggle();
+    refTooltipBottom.current.toggle();
   };
 
   return (
     <div className="App">
       <div className="contenedor">
-        <div style={{ position: 'relative' }}>
-          <Tooltip id="toolt" content="一夜情" ref={ref} offset={10}>
-            {
-              <button type="button" id="caja" className="caja">
-                Bottom
-              </button>
+        <div style={{ position: "relative" }}>
+          <div>DIV DE FUERA</div>
+          <h1>Antes del trriger</h1>
+          <Tooltip
+            id="toolt"
+            content={
+              <img
+                alt="Alternative text"
+                src="https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg"
+              ></img>
             }
+            ref={refTooltipBottom}
+            offset={10}
+          >
+            <button
+              type="button"
+              aria-describedby="test"
+              id="caja"
+              className="caja"
+              onClick={() => {
+                refTooltipBottom.current.toggle();
+              }}
+            >
+              Bottom del triggerrrr
+            </button>
           </Tooltip>
         </div>
         <div className="caja">Sin tooltip</div>
-
+        <button type="button" id="caja" className="caja">
+          Bottom sin wrapper
+        </button>
         <div className="caja" onClick={handleOnHover}>
           Abro el otro
         </div>
