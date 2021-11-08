@@ -116,7 +116,7 @@ function Tooltip(tooltipProps, ref) {
         setTooltipStyles(tooltipStyles);
       }
     },
-    [limits, offset, position, positions, show, tooltipRef, triggerRef],
+    [limits, offset, position, positions, show],
   )
 
   /**

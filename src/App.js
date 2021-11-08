@@ -38,13 +38,12 @@ function App() {
     <div className="App">
       <div className="contenedor">
         
-        <Tooltip content="Últimas unidades" >
-        Sin tooltip
+        <Tooltip content={<img width="40px" height="40px" src="https://hernandezmiguel.es/images/yo.jpg" alt="Miguel" />} >
+          <button type="button" id="caja" className="caja">
+            Bottom sin wrapper
+          </button>
         </Tooltip>
-        <button type="button" id="caja" className="caja">
-          Bottom sin wrapper
-        </button>
-        <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black", overflow: "auto"}}>
+        {/* <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black", overflow: "auto"}}>
           <Tooltip
             id="toolt"
             content="Últimas unidades con texto más largo largo"
@@ -67,7 +66,7 @@ function App() {
         <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnClick}>
           Abro el otro
         </div>
-        </Tooltip>
+        </Tooltip> */}
 
         {/* <Tooltip content="Texto del tooltip muuuuuucho más largo" position="left">
           {<input type="text" />}
