@@ -9,13 +9,13 @@ describe('Tooltip', () => {
 
   it('should render the trigger component as tooltip children', () => {
     const trigger = "Text with tooltip";
-    render(<Tooltip content="" children={trigger} />);
+    render(<Tooltip content="" children={<p>{trigger}</p>} />);
     expect(screen.getByText(trigger)).toBeInTheDocument()
   });
 
   it('should render the tooltip content on hover', () => {
     const content = "Tooltip content";
-    render(<Tooltip content={content} children="Trigger" />);
+    render(<Tooltip content={content} children={<p>Trigger</p>} />);
     userEvent.hover(screen.getByText("Trigger"))
     const tooltip = screen.getByText(content)
     expect(tooltip).toBeInTheDocument()
@@ -23,7 +23,7 @@ describe('Tooltip', () => {
 
   it('should not render the tooltip on trigger unhover', async() => {
     const content = "Tooltip content";
-    render(<Tooltip content={content}>Trigger</Tooltip>);
+    render(<Tooltip content={content}><p>Trigger</p></Tooltip>);
     const trigger = screen.getByText("Trigger");
     userEvent.hover(trigger)
     const tooltip = screen.getByText(content)
@@ -34,7 +34,7 @@ describe('Tooltip', () => {
 
   it('should not render the tooltip on tooltip content hover', async() => {
     const content = "Tooltip content";
-    render(<Tooltip content={content}>Trigger</Tooltip>);
+    render(<Tooltip content={content}><p>Trigger</p></Tooltip>);
     const trigger = screen.getByText("Trigger");
     userEvent.hover(trigger)
     const tooltip = screen.getByText(content)
@@ -93,7 +93,7 @@ describe('Tooltip', () => {
   it("should open and close the tooltip with a reference", async () => {
     const tooltipText = "Tooltip"
     const tooltipRef = React.createRef()
-    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children="Trigger" />);
+    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children={<p>Trigger</p>} />);
     expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
     tooltipRef.current.open()
     expect(screen.getByText(tooltipText)).toBeInTheDocument()
@@ -104,7 +104,7 @@ describe('Tooltip', () => {
   it("should toggle the tooltip with a reference", async () => {
     const tooltipText = "Tooltip"
     const tooltipRef = React.createRef()
-    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children="Trigger" />);
+    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children={<p>Trigger</p>} />);
     expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
     act(() => {
       tooltipRef.current.toggle()

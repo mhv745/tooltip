@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 /**
- * Distance between Element and Tooltip. (Half of the hipotenuse of the arrow)
+ * Arrow height
  */
 const ARROW_HYPOTENUSE = 11.3137;
 
