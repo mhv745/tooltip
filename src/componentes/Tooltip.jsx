@@ -13,17 +13,13 @@ import "./Tooltip.scss";
 import useTooltipStyles from "./hooks/useTooltip";
 
 /**
- * Minimum distance to boundary
+ * Minimum distance to the edge of the window
  */
 const MIN_DISTANCE_BOUNDARY = 10;
 
-//TODO Borrar
-const ESTADO_POR_DEFECTO = false;
-
 /**
- * Tooltip
- * 
- * Use case
+ * Tooltip that displays non-modal information for a component
+ * @example
  * ```
  * <Tooltip content="Tooltip content">...</Tooltip>
  * ```
@@ -33,16 +29,16 @@ const ESTADO_POR_DEFECTO = false;
  * @property {"bottom"|"top"|"left"|"right"=} position - tooltip position with respect to children. Default value: `bottom`
  * @property {number=} offset - tooltip offset
  * @property {React.ElementRef=} boundary - tooltip limits
- * @property {number|string=} key
+ * @property {number|string=} key tooltip key
  * 
  * @typedef {Object} RefType
- * @property {Object} current
- * @property {() => void} current.open
- * @property {() => void} current.close
- * @property {() => void} current.toggle
+ * @property {Object} current - current reference
+ * @property {() => void} current.open - open tooltip from reference
+ * @property {() => void} current.close - close tooltip from reference
+ * @property {() => void} current.toggle - toggle tooltip from reference
  * 
  * @param {TooltipProps} tooltipProps
- * @param {RefType} ref
+ * @param {RefType} ref - tooltip reference
 /**
 
  * @returns {JSX.Element} JSX.Element
@@ -58,7 +54,7 @@ function Tooltip(tooltipProps, ref) {
     key,
   } = tooltipProps;
 
-  const [show, setShow] = useState(ESTADO_POR_DEFECTO);
+  const [show, setShow] = useState(false);
   const [closing, setClosing] = useState(false);
   const [limits, setLimits] = useState({
     left: MIN_DISTANCE_BOUNDARY,
@@ -72,9 +68,6 @@ function Tooltip(tooltipProps, ref) {
 
   const triggerRef = useRef();
   const tooltipRef = useRef();
-
-  console.log(limits)
-
 
   /**
    * Listens the resize event in order to change the trigger element dimensions
@@ -105,6 +98,9 @@ function Tooltip(tooltipProps, ref) {
     [getBottomStyles, getTopStyles, getLeftStyles, getRightStyles]
   );
 
+  /**
+   * Update position and dimensions of the tooltip
+   */
   const updateTooltip = useCallback(
     () => {
       if (show && tooltipRef.current && triggerRef.current) {
@@ -123,6 +119,9 @@ function Tooltip(tooltipProps, ref) {
     [limits, offset, position, positions, show, tooltipRef, triggerRef],
   )
 
+  /**
+   * Update tooltip position and dimensions
+   */
   useEffect(() => {
     updateTooltip()
   }, [updateTooltip]);
@@ -141,7 +140,7 @@ function Tooltip(tooltipProps, ref) {
   const handleClose = () => {
     setClosing(true);
     setTimeout(() => {
-      setShow(ESTADO_POR_DEFECTO);
+      setShow(false);
     }, 140);
   };
 
@@ -149,12 +148,21 @@ function Tooltip(tooltipProps, ref) {
    * Exposes the API in component reference
    */
   useImperativeHandle(ref, () => ({
+    /**
+     * Open the tooltip
+     */
     open: () => {
       handleOpen();
     },
+    /**
+     * Close the tooltip
+     */
     close: () => {
       handleClose();
     },
+    /**
+     * Toggle the tooltip
+     */
     toggle: () => {
       show ? handleClose() : handleOpen();
     },
