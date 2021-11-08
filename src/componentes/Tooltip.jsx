@@ -52,7 +52,7 @@ function Tooltip(tooltipProps, ref) {
     content,
     position = "bottom",
     offset = 0,
-    boundaryRef,
+    boundary,
     id,
     children,
     key,
@@ -60,7 +60,7 @@ function Tooltip(tooltipProps, ref) {
 
   const [show, setShow] = useState(ESTADO_POR_DEFECTO);
   const [closing, setClosing] = useState(false);
-  const [boundary, setBoundary] = useState({
+  const [limits, setLimits] = useState({
     left: MIN_DISTANCE_BOUNDARY,
     right: window.innerWidth - MIN_DISTANCE_BOUNDARY,
   });
@@ -73,6 +73,7 @@ function Tooltip(tooltipProps, ref) {
   const triggerRef = useRef();
   const tooltipRef = useRef();
 
+  console.log(limits)
 
 
   /**
@@ -82,17 +83,17 @@ function Tooltip(tooltipProps, ref) {
     const onTriggerChange = (e) => {
       let left = MIN_DISTANCE_BOUNDARY;
       let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
-      if (boundaryRef && boundaryRef.current) {
-        const clientRect = boundaryRef.current.getBoundingClientRect();
+      if (boundary && boundary.current) {
+        const clientRect = boundary.current.getBoundingClientRect();
         left = clientRect.left;
         right = clientRect.right;
       }
-      setBoundary({ left, right });
+      setLimits({ left, right });
     };
     onTriggerChange();
     window.addEventListener("resize", onTriggerChange);
     return () => window.removeEventListener("resize", onTriggerChange);
-  }, [boundaryRef, show]);
+  }, [boundary, show]);
   
   const positions = useMemo(
     () => ({
@@ -113,13 +114,13 @@ function Tooltip(tooltipProps, ref) {
           tooltip,
           trigger,
           offset,
-          boundary,
+          limits,
         });
         setArrowStyles(arrowStyles);
         setTooltipStyles(tooltipStyles);
       }
     },
-    [boundary, offset, position, positions, show, tooltipRef, triggerRef],
+    [limits, offset, position, positions, show, tooltipRef, triggerRef],
   )
 
   useEffect(() => {

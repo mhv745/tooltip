@@ -43,7 +43,7 @@ function App() {
             content="Últimas unidades con texto más largo largo"
             position={pos}
             offset={10}
-            boundaryRef={boxRef}
+            boundary={boxRef}
             ref={refTooltipBottom}
           >
             <div

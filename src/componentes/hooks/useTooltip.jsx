@@ -13,16 +13,15 @@ const useTooltipStyles = () => {
    * Get the bottom tooltip styles
    */
   const getBottomStyles = useCallback(
-    ({ trigger, tooltip, offset, boundary }) => {
+    ({ trigger, tooltip, offset, limits }) => {
       const topArrow = trigger.bottom + offset + document.documentElement.scrollTop;
       const leftArrow = trigger.left + trigger.width / 2;
       const leftTooltip = leftArrow - tooltip.width / 2;
-      console.log(trigger.bottom, topArrow)
       let translateX = 0;
-      if (leftTooltip < boundary.left) {
-        translateX = Math.abs(leftTooltip) + boundary.left;
-      } else if (leftTooltip + tooltip.width > boundary.right) {
-        translateX = boundary.right - leftTooltip - tooltip.width;
+      if (leftTooltip < limits.left) {
+        translateX = Math.abs(leftTooltip) + limits.left;
+      } else if (leftTooltip + tooltip.width > limits.right) {
+        translateX = limits.right - leftTooltip - tooltip.width;
       }
 
       const arrowStyles = {
@@ -33,7 +32,7 @@ const useTooltipStyles = () => {
         top: `${Math.floor(topArrow + ARROW_HYPOTENUSE / 2)}px`,
         left: `${leftTooltip}px`,
         transform: `translateX(${translateX}px)`,
-        maxWidth: `${boundary.right - boundary.left}px`,
+        maxWidth: `${limits.right - limits.left}px`,
         width: `${tooltip.width}px`
       };
 
@@ -45,15 +44,15 @@ const useTooltipStyles = () => {
   /**
    * Get the top tooltip styles
    */
-  const getTopStyles = useCallback(({ trigger, tooltip, offset, boundary }) => {
+  const getTopStyles = useCallback(({ trigger, tooltip, offset, limits }) => {
     const topArrow = trigger.top - offset - ARROW_HYPOTENUSE + document.documentElement.scrollTop;
     const leftArrow = trigger.left + trigger.width / 2;
     const leftTooltip = leftArrow - tooltip.width / 2;
     let translateX = 0;
-    if (leftTooltip < boundary.left) {
-      translateX = Math.abs(leftTooltip) + boundary.left;
-    } else if (leftTooltip + tooltip.width > boundary.right) {
-      translateX = boundary.right - leftTooltip - tooltip.width;
+    if (leftTooltip < limits.left) {
+      translateX = Math.abs(leftTooltip) + limits.left;
+    } else if (leftTooltip + tooltip.width > limits.right) {
+      translateX = limits.right - leftTooltip - tooltip.width;
     }
     const arrowStyles = {
       top: `${topArrow}px`,
@@ -63,7 +62,7 @@ const useTooltipStyles = () => {
       top: `${Math.ceil(topArrow - tooltip.height + ARROW_HYPOTENUSE / 2)}px`,
       left: `${leftTooltip}px`,
       transform: `translateX(${translateX}px)`,
-      maxWidth: `${boundary.right - boundary.left}px`,
+      maxWidth: `${limits.right - limits.left}px`,
       width: `${tooltip.width}px`
     };
 
