@@ -37,7 +37,14 @@ function App() {
   return (
     <div className="App">
       <div className="contenedor">
-        <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black"}}>
+        
+        <Tooltip content="Últimas unidades" >
+        Sin tooltip
+        </Tooltip>
+        <button type="button" id="caja" className="caja">
+          Bottom sin wrapper
+        </button>
+        <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black", overflow: "auto"}}>
           <Tooltip
             id="toolt"
             content="Últimas unidades con texto más largo largo"
@@ -49,18 +56,13 @@ function App() {
             <div
               aria-describedby="test"
               id="caja"
+              style={{width: "500px"}}
               className="caja"
             >
               Bottom del triggerrrr
             </div>
           </Tooltip>
         </div>
-        <Tooltip content="Últimas unidades">
-          <div className="caja">Sin tooltip</div>
-        </Tooltip>
-        <button type="button" id="caja" className="caja">
-          Bottom sin wrapper
-        </button>
         <Tooltip content="un tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordes">
         <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnClick}>
           Abro el otro

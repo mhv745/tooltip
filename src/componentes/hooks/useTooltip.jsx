@@ -19,7 +19,7 @@ const useTooltipStyles = () => {
       const leftTooltip = leftArrow - tooltip.width / 2;
       let translateX = 0;
       if (leftTooltip < limits.left) {
-        translateX = Math.abs(leftTooltip) + limits.left;
+        translateX = Math.abs(leftTooltip - limits.left);
       } else if (leftTooltip + tooltip.width > limits.right) {
         translateX = limits.right - leftTooltip - tooltip.width;
       }
@@ -50,7 +50,7 @@ const useTooltipStyles = () => {
     const leftTooltip = leftArrow - tooltip.width / 2;
     let translateX = 0;
     if (leftTooltip < limits.left) {
-      translateX = Math.abs(leftTooltip) + limits.left;
+      translateX = Math.abs(leftTooltip - limits.left);
     } else if (leftTooltip + tooltip.width > limits.right) {
       translateX = limits.right - leftTooltip - tooltip.width;
     }

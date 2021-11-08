@@ -3,18 +3,19 @@ import { render, screen, waitForElementToBeRemoved} from '@testing-library/react
 import userEvent from "@testing-library/user-event"
 import Tooltip from './Tooltip';
 import '@testing-library/jest-dom'
+import { act } from 'react-dom/test-utils'
 
 describe('Tooltip', () => {
 
   it('should render the trigger component as tooltip children', () => {
     const trigger = "Text with tooltip";
-    render(<Tooltip content="">{trigger}</Tooltip>);
+    render(<Tooltip content="" children={trigger} />);
     expect(screen.getByText(trigger)).toBeInTheDocument()
   });
 
   it('should render the tooltip content on hover', () => {
     const content = "Tooltip content";
-    render(<Tooltip content={content} >Trigger</Tooltip>);
+    render(<Tooltip content={content} children="Trigger" />);
     userEvent.hover(screen.getByText("Trigger"))
     const tooltip = screen.getByText(content)
     expect(tooltip).toBeInTheDocument()
@@ -56,7 +57,6 @@ describe('Tooltip', () => {
     userEvent.hover(content)
     const tooltip = await screen.findByText(tooltipText)
     const top = window.getComputedStyle(tooltip).top
-    console.log(top)
     expect(parseInt(top)).toBeLessThan(0)
   });
 
@@ -89,4 +89,32 @@ describe('Tooltip', () => {
     const left = window.getComputedStyle(tooltip).left
     expect(parseInt(left)).toBeGreaterThan(0)
   });
+
+  it("should open and close the tooltip with a reference", async () => {
+    const tooltipText = "Tooltip"
+    const tooltipRef = React.createRef()
+    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children="Trigger" />);
+    expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
+    tooltipRef.current.open()
+    expect(screen.getByText(tooltipText)).toBeInTheDocument()
+    tooltipRef.current.close()
+    await waitForElementToBeRemoved(() => screen.queryByText(tooltipText))
+    
+  })
+
+  it("should toggle the tooltip with a reference", async () => {
+    const tooltipText = "Tooltip"
+    const tooltipRef = React.createRef()
+    render(<Tooltip ref={tooltipRef} position="right" content={tooltipText} children="Trigger" />);
+    expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
+    act(() => {
+      tooltipRef.current.toggle()
+    })
+    expect(screen.getByText(tooltipText)).toBeInTheDocument()
+    act(() => {
+      tooltipRef.current.toggle()
+    })
+    await waitForElementToBeRemoved(() => screen.queryByText(tooltipText))
+  })
+
 });

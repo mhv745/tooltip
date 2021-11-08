@@ -171,7 +171,7 @@ function Tooltip(tooltipProps, ref) {
   return (
     <>
       {
-        cloneElement(children, { 
+        cloneElement(typeof children === "string" ? <span>{children}</span> : children, { 
           "aria-describedby": id,  
           onMouseEnter: handleOpen,
           onMouseLeave:handleClose,
