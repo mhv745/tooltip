@@ -99,7 +99,6 @@ describe('Tooltip', () => {
     expect(screen.getByText(tooltipText)).toBeInTheDocument()
     tooltipRef.current.close()
     await waitForElementToBeRemoved(() => screen.queryByText(tooltipText))
-    
   })
 
   it("should toggle the tooltip with a reference", async () => {
