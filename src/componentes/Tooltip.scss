@@ -1,11 +1,12 @@
 .tooltip-wrapper {
   animation: fadingIn 0.2s ease-in-out;
   transition: opacity 0.2s ease-in-out;
-  &.closing {
+
+  &--closing {
     opacity: 0;
-    //animation: fadingOut 0.2s ease-in-out;
   }
 }
+
 .tooltip-content {
   position: absolute;
   border: 1px solid black;
@@ -13,6 +14,7 @@
   background: white;
   box-sizing: border-box;
 }
+
 .arrow {
   position: absolute;
   display: block;
@@ -57,11 +59,3 @@
     opacity: 1;
   }
 }
-// @keyframes fadingOut {
-//   0% {
-//     opacity: 1;
-//   }
-//   100% {
-//     opacity: 0;
-//   }
-// }

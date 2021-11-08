@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useRef,
   useEffect,
@@ -9,8 +9,14 @@ import {
   cloneElement,
 } from "react";
 import { createPortal } from "react-dom";
+import {
+  getBottomStyles,
+  getLeftStyles,
+  getRightStyles,
+  getTopStyles,
+} from "./helpers/getTooltipStyles";
+
 import "./Tooltip.scss";
-import useTooltipStyles from "./hooks/useTooltip";
 
 /**
  * Minimum distance to the edge of the window
@@ -23,27 +29,29 @@ const MIN_DISTANCE_BOUNDARY = 10;
  * ```
  * <Tooltip content="Tooltip content">...</Tooltip>
  * ```
+ *
  * @typedef {object} TooltipProps
- * @property {string=} id - tooltip id
- * @property {string|JSX.Element} content - Content of the tooltip
- * @property {"bottom"|"top"|"left"|"right"=} position - tooltip position with respect to children. Default value: `bottom`
- * @property {number=} offset - tooltip offset
- * @property {React.ElementRef=} boundary - tooltip limits
- * @property {number|string=} key tooltip key
+ * @property {string=} id Tooltip id
+ * @property {string|JSX.Element} content Tooltip content
+ * @property {"bottom"|"top"|"left"|"right"=} position Tooltip position with respect to children. Default value: `bottom`
+ * @property {number=} offset Tooltip offset. Default value: `0`
+ * @property {object=} boundary Tooltip limits
+ * @property {number|string=} key Tooltip key
+ * @property {object=} children
  * 
  * @typedef {Object} RefType
- * @property {Object} current - current reference
- * @property {() => void} current.open - open tooltip from reference
- * @property {() => void} current.close - close tooltip from reference
- * @property {() => void} current.toggle - toggle tooltip from reference
+ * @property {Object} current Current reference
+ * @property {() => void} current.open Open tooltip from reference
+ * @property {() => void} current.close Close tooltip from reference
+ * @property {() => void} current.toggle Toggle tooltip from reference
  * 
  * @param {TooltipProps} tooltipProps
- * @param {RefType} ref - tooltip reference
+ * @param {RefType} ref Tooltip reference
 /**
 
  * @returns {JSX.Element} JSX.Element
  */
-function Tooltip(tooltipProps, ref) {
+const Tooltip = (tooltipProps, ref) => {
   const {
     content,
     position = "bottom",
@@ -58,22 +66,26 @@ function Tooltip(tooltipProps, ref) {
   const [closing, setClosing] = useState(false);
   const [limits, setLimits] = useState({
     left: MIN_DISTANCE_BOUNDARY,
-    right: window.innerWidth - MIN_DISTANCE_BOUNDARY,
+    right: document.body.clientWidth - MIN_DISTANCE_BOUNDARY,
   });
   const [tooltipStyles, setTooltipStyles] = useState({});
   const [arrowStyles, setArrowStyles] = useState({});
 
-  const { getBottomStyles, getTopStyles, getRightStyles, getLeftStyles } =
-    useTooltipStyles();
-
+  /** 
+   * @constant @type {React.MutableRefObject}
+   */
   const triggerRef = useRef();
+
+  /** 
+   * @constant @type {React.MutableRefObject}
+   */
   const tooltipRef = useRef();
 
   /**
    * Listens the resize event in order to change the trigger element dimensions
    */
-   useEffect(() => {
-    const onTriggerChange = (e) => {
+  useEffect(() => {
+    const onTriggerChange = () => {
       let left = MIN_DISTANCE_BOUNDARY;
       let right = window.innerWidth - MIN_DISTANCE_BOUNDARY;
       if (boundary && boundary.current) {
@@ -83,11 +95,16 @@ function Tooltip(tooltipProps, ref) {
       }
       setLimits({ left, right });
     };
+
     onTriggerChange();
+
     window.addEventListener("resize", onTriggerChange);
     return () => window.removeEventListener("resize", onTriggerChange);
   }, [boundary, show]);
   
+  /**
+   * @constant positions Methods to execute depending on the given position
+   */
   const positions = useMemo(
     () => ({
       bottom: getBottomStyles,
@@ -95,7 +112,7 @@ function Tooltip(tooltipProps, ref) {
       left: getLeftStyles,
       right: getRightStyles,
     }),
-    [getBottomStyles, getTopStyles, getLeftStyles, getRightStyles]
+    []
   );
 
   /**
@@ -123,7 +140,7 @@ function Tooltip(tooltipProps, ref) {
    * Update tooltip position and dimensions
    */
   useEffect(() => {
-    updateTooltip()
+    updateTooltip();
   }, [updateTooltip]);
 
   /**
@@ -170,25 +187,23 @@ function Tooltip(tooltipProps, ref) {
 
   return (
     <>
-      {
-        cloneElement(children, { 
-          "aria-describedby": id,  
-          onMouseEnter: handleOpen,
-          onMouseLeave:handleClose,
-          onFocus:handleOpen,
-          onBlur:handleClose,
-          ref:triggerRef,
-          key: key
-        })
-      }
+      {cloneElement(children, {
+        "aria-describedby": id,
+        onMouseEnter: handleOpen,
+        onMouseLeave: handleClose,
+        onFocus: handleOpen,
+        onBlur: handleClose,
+        ref: triggerRef,
+        key: key,
+      })}
       {show &&
         createPortal(
           <div
+            id={id}
             className={`tooltip-wrapper ${
-              closing ? "closing" : ""
+              closing ? "tooltip-wrapper--closing" : ""
             } tooltip-${position}`}
             role="tooltip"
-            id={id}
           >
             <div
               className={`tooltip-content`}
@@ -203,6 +218,6 @@ function Tooltip(tooltipProps, ref) {
         )}
     </>
   );
-}
+};
 
 export default forwardRef(Tooltip);

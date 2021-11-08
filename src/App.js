@@ -4,33 +4,32 @@ import Tooltip from "./componentes/Tooltip";
 
 function App() {
   const refTooltipBottom = useRef();
-  const boxRef = useRef()
-  const [pos, setPos] = useState("bottom")
-  const [open, setOpen] = useState(false)
+  const boxRef = useRef();
+  const [pos, setPos] = useState("bottom");
+  const [open, setOpen] = useState(false);
 
   const handleOnClick = () => {
-    let newPos = "bottom"
+    let newPos = "bottom";
     switch (pos) {
       case "bottom":
-        newPos ="left"
+        newPos = "left";
         break;
       case "top":
-        newPos ="right"
+        newPos = "right";
         break;
       case "left":
-        newPos ="top"
+        newPos = "top";
         break;
       default:
-        newPos ="bottom"
+        newPos = "bottom";
         break;
     }
-    if(open){
+    if (open) {
       setTimeout(() => {
-        setPos(newPos)
-        
+        setPos(newPos);
       }, 200);
     }
-    setOpen(!open)
+    setOpen(!open);
     refTooltipBottom.current.toggle();
   };
 
