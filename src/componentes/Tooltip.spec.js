@@ -56,7 +56,7 @@ describe('Tooltip', () => {
     userEvent.hover(content)
     const tooltip = await screen.findByText(tooltipText)
     const top = window.getComputedStyle(tooltip).top
-    console.log(top)
+
     expect(parseInt(top)).toBeLessThan(0)
   });
 

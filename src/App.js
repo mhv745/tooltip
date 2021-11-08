@@ -4,40 +4,46 @@ import Tooltip from "./componentes/Tooltip";
 
 function App() {
   const refTooltipBottom = useRef();
-  const boxRef = useRef()
-  const [pos, setPos] = useState("bottom")
-  const [open, setOpen] = useState(false)
+  const boxRef = useRef();
+  const [pos, setPos] = useState("bottom");
+  const [open, setOpen] = useState(false);
 
   const handleOnClick = () => {
-    let newPos = "bottom"
+    let newPos = "bottom";
     switch (pos) {
       case "bottom":
-        newPos ="left"
+        newPos = "left";
         break;
       case "top":
-        newPos ="right"
+        newPos = "right";
         break;
       case "left":
-        newPos ="top"
+        newPos = "top";
         break;
       default:
-        newPos ="bottom"
+        newPos = "bottom";
         break;
     }
-    if(open){
+    if (open) {
       setTimeout(() => {
-        setPos(newPos)
-        
+        setPos(newPos);
       }, 200);
     }
-    setOpen(!open)
+    setOpen(!open);
     refTooltipBottom.current.toggle();
   };
 
   return (
     <div className="App">
       <div className="contenedor">
-        <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black"}}>
+        <div
+          ref={boxRef}
+          style={{
+            width: "300px",
+            height: "400px",
+            border: "1px dashed green",
+          }}
+        >
           <Tooltip
             id="toolt"
             content="Últimas unidades con texto más largo largo"
@@ -46,11 +52,7 @@ function App() {
             boundaryRef={boxRef}
             ref={refTooltipBottom}
           >
-            <div
-              aria-describedby="test"
-              id="caja"
-              className="caja"
-            >
+            <div id="caja" className="caja">
               Bottom del triggerrrr
             </div>
           </Tooltip>
@@ -62,9 +64,13 @@ function App() {
           Bottom sin wrapper
         </button>
         <Tooltip content="un tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordesun tooltip muy largo para comprobar bordes">
-        <div className="caja" style={{width: "50px", height: "50px", justifySelf: "end"}} onClick={handleOnClick}>
-          Abro el otro
-        </div>
+          <div
+            className="caja"
+            style={{ width: "50px", height: "50px", justifySelf: "end" }}
+            onClick={handleOnClick}
+          >
+            Abro el otro
+          </div>
         </Tooltip>
 
         {/* <Tooltip content="Texto del tooltip muuuuuucho más largo" position="left">
