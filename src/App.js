@@ -8,6 +8,9 @@ function App() {
   const [pos, setPos] = useState("bottom");
   const [open, setOpen] = useState(false);
 
+  const toolt1 = useRef();
+  const toolt2 = useRef();
+
   const handleOnClick = () => {
     let newPos = "bottom";
     switch (pos) {
@@ -33,15 +36,53 @@ function App() {
     refTooltipBottom.current.toggle();
   };
 
+  const abrirTooltip = (t) => {
+    if (t) {
+      toolt1.current.toggle();
+    } else {
+      toolt2.current.toggle();
+    }
+  };
+
   return (
     <div className="App">
-      <div className="contenedor">
-        
-        <Tooltip content={<img width="40px" height="40px" src="https://hernandezmiguel.es/images/yo.jpg" alt="Miguel" />} >
-          <button type="button" id="caja" className="caja">
-            Bottom sin wrapper
-          </button>
+      <div
+        style={{
+          width: "400px",
+          height: "500px",
+          border: "1px solid black",
+          margin: "0 auto",
+          position: "absolute",
+          left: "200px",
+          top: "200px",
+        }}
+      >
+        <Tooltip asChild content="Esto es un tooltip">
+          <span><MyComponente /></span>
         </Tooltip>
+
+        <Tooltip ref={toolt1} asChild content="Esto es un tooltip">
+          <button>Trigger boton</button>
+        </Tooltip>
+      </div>
+      <div className="contenedor">
+        {/* <button type="button" onClick={() => abrirTooltip(true)}>
+          Abrir tooltip 1
+        </button>
+        <button type="button" onClick={() => abrirTooltip(false)}>
+          Abrir tooltip 2
+        </button>
+        <Tooltip ref={toolt1} content="Tooltip 1">
+          <div
+            style={{ width: "50px", height: "20px", background: "yellow" }}
+          ></div>
+        </Tooltip>
+
+        <Tooltip ref={toolt2} content="Tooltip 2">
+          <div
+            style={{ width: "50px", height: "20px", background: "blue" }}
+          ></div>
+        </Tooltip> */}
         {/* <div ref={boxRef} style={{width: "300px", height: "400px", border: "1px solid black", overflow: "auto"}}>
           <Tooltip
             id="toolt"
@@ -87,5 +128,9 @@ function App() {
     </div>
   );
 }
+
+const MyComponente = () => {
+  return <button ref={}>Trigger</button>;
+};
 
 export default App;

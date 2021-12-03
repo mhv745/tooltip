@@ -1,33 +1,38 @@
-.tooltip-wrapper {
-  animation: fadingIn 0.2s ease-in-out;
+.fukku-tooltip {
+  opacity: 0;
   transition: opacity 0.2s ease-in-out;
+  animation: fadingIn 0.2s ease-in-out;
 
   &--closing {
     opacity: 0;
   }
+
+  &--opening {
+    opacity: 1;
+  }
 }
 
-.tooltip-content {
+.fukku-tooltip-content {
   position: absolute;
-  border: 1px solid black;
+  box-sizing: border-box;
   padding: 8px 12px;
   background: white;
-  box-sizing: border-box;
+  border: 1px solid black;
 }
 
-.arrow {
+.fukku-tooltip-arrow {
   position: absolute;
   display: block;
-  background: white;
-  border: solid black;
   box-sizing: border-box;
   width: 8px;
   height: 8px;
+  background: white;
+  border: solid black;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
   transform: rotate(45deg);
-  border-bottom-width: 0px;
-  border-right-width: 0px;
-  border-top-width: 0px;
-  border-left-width: 0px;
   transform-origin: top left;
 
   &--bottom {
@@ -36,8 +41,8 @@
   }
 
   &--top {
-    border-bottom-width: 1px;
     border-right-width: 1px;
+    border-bottom-width: 1px;
   }
 
   &--right {
@@ -46,8 +51,8 @@
   }
 
   &--left {
-    border-right-width: 1px;
     border-top-width: 1px;
+    border-right-width: 1px;
   }
 }
 
@@ -55,6 +60,7 @@
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
